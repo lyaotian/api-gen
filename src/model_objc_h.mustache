@@ -1,0 +1,24 @@
+//  {{prefix}}{{name}}.h
+//  {{doc}}
+//  
+//
+//  Created by Yaotian on 3/24/16.
+//  Copyright © 2016 kwm. All rights reserved.
+//
+
+#import "KWMBaseModel.h"
+
+{{#refs}}
+#import "{{prefix}}{{{.}}}.h"
+{{/refs}}
+
+@protocol {{prefix}}{{name}} <NSObject>
+@end
+
+@interface {{prefix}}{{name}} : KWMBaseModel
+  {{#properties}}
+/**{{doc}}*/
+@property (nonatomic) {{{type}}} {{name}};
+  {{/properties}}
+
+@end

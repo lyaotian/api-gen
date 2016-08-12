@@ -1,0 +1,35 @@
+package com.kollway.android.ballsoul.api;
+
+
+import com.kollway.android.ballsoul.model.Advertise;
+import com.kollway.android.ballsoul.model.Balldate;
+import com.kollway.android.ballsoul.model.City;
+import com.kollway.android.ballsoul.model.Match;
+import com.kollway.android.ballsoul.model.MatchSchedule;
+import com.kollway.android.ballsoul.model.Phone;
+import com.kollway.android.ballsoul.model.Push;
+import com.kollway.android.ballsoul.model.Ranking;
+import com.kollway.android.ballsoul.model.RspModel;
+import com.kollway.android.ballsoul.model.Team;
+import com.kollway.android.ballsoul.model.User;
+
+import retrofit.Callback;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.http.Query;
+import retrofit.mime.TypedFile;
+
+/**
+ * API Retrofit 接口
+ */
+public interface REST {
+    public static final int KWM_PAGE_SIZE                   = ${main.pageSize};
+    public static final String API_HOST                     = @"${main.host}";
+    public static final int API_HOST_PORT                   = ${main.port};
+
+  
+}

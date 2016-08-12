@@ -1,0 +1,18 @@
+package {{packageName}}.model;
+import {{packageName}}.BaseModel;
+import java.util.ArrayList;
+
+{{#refs}}
+import {{packageName}}.model.{{{.}}};
+{{/refs}}
+
+/**
+ * {{doc}}
+ */
+public class {{name}} extends BaseModel  {
+
+  {{#properties}}
+    /**{{doc}}*/
+    public {{{type}}} {{name}};
+  {{/properties}}
+}

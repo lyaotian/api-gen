@@ -1,0 +1,577 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "博宇",
+    "description": "描述",
+    "termOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "Yaotian"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "host": "boyu.localhost",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Student",
+      "description": "学生、家长相关"
+    },
+    {
+      "name": "Teacher",
+      "description": "教师相关"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/StudentApi/getScheduleList": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "根据日期获取课程、考试、活动、约谈信息[完成]",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "日期,格式为xxxx-xx-xx",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema":{
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Schedule"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/getBusyDate": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "获取一个月内的繁忙日期信息[完成]",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "日期,格式为xxxx-xx,如2016-09",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回的是一个整数数组",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/getAddBusyDate": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "添加繁忙日期信息[完成]",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "日期,格式为xxxx-xx-xx",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/courseDetail": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "获取课程详情",
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "description": "课程id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/examDetail": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "获取考试详情",
+        "parameters": [
+          {
+            "name": "exam_id",
+            "in": "query",
+            "description": "考试id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Examination"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/getScheduleList": {
+      "get": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "根据日期获取课程、考试、活动、约谈信息[完成]",
+        "parameters": [
+          {
+            "name": "teacher_id",
+            "in": "query",
+            "description": "教师id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "日期,格式为xxxx-xx-xx",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema":{
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TeacherSchedule"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/UserApi/getSms": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "获取验证码",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "md5(fangsuyi+phone)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions":{
+    "RspModel": {
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "API返回代号"
+        },
+        "message": {
+          "type": "string",
+          "description": "描述信息"
+        }
+      }
+    },
+    "Schedule": {
+      "description": "日期对应的课程、考试、活动、约谈列表",
+      "required": [
+        "student_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "对应的课程、考试、活动或约谈id"
+        },
+        "type": {
+          "type": "integer",
+          "format": "int32",
+          "description": "类型,0-课程,1-考试,2-活动,3-约谈"
+        },
+        "image": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈图标"
+        },
+        "name": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈名称"
+        },
+        "start_time_txt": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈开始时间"
+        },
+        "end_time_txt": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈结束时间"
+        },
+        "classroom": {
+          "type": "string",
+          "description": "教室"
+        },
+        "teacher": {
+          "type": "string",
+          "description": "老师英文名"
+        }
+      }
+    },
+    "TeacherSchedule": {
+      "description": "日期对应的课程、考试、活动、约谈列表",
+      "required": [
+        "student_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "对应的课程、考试、活动或约谈id"
+        },
+        "type": {
+          "type": "integer",
+          "format": "int32",
+          "description": "类型,0-课程,1-考试,2-活动,3-约谈"
+        },
+        "image": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈图标"
+        },
+        "name": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈名称"
+        },
+        "start_time_txt": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈开始时间"
+        },
+        "end_time_txt": {
+          "type": "string",
+          "description": "课程、考试、活动或约谈结束时间"
+        },
+        "classroom": {
+          "type": "string",
+          "description": "教室"
+        },
+        "student_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "学生人数"
+        }
+      }
+    },
+    "Course": {
+      "description": "课程信息",
+      "required": [
+        "course_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "课程id"
+        },
+        "image": {
+          "type": "string",
+          "description": "课程版头图"
+        },
+        "name": {
+          "type": "string",
+          "description": "课程名称"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": "开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": "结束时间"
+        },
+        "start_time_txt": {
+          "type": "string",
+          "description": "上课时间"
+        },
+        "end_time_txt": {
+          "type": "string",
+          "description": "下课时间"
+        },
+        "start_hour": {
+          "type": "string",
+          "description": "开始小时数"
+        },
+        "end_hour": {
+          "type": "string",
+          "description": "结束小时数"
+        },
+        "classroom": {
+          "type": "string",
+          "description": "教室"
+        },
+        "remark": {
+          "type": "string",
+          "description": "备注"
+        },
+        "is_class_over": {
+          "type": "integer",
+          "format": "int32",
+          "description": "是否结束课程(0-未确认，1-已确认)"
+        },
+        "is_assign_homework": {
+          "type": "integer",
+          "format": "int32",
+          "description": "(是否已布置作业(0-否，1-是))"
+        },
+        "score": {
+          "type": "integer",
+          "description": "老师评分"
+        },
+        "teacher": {
+          "$ref":"#/definitions/Teacher",
+          "description": "上课老师"
+        },
+        "homework": {
+          "$ref":"#/definitions/Homework",
+          "description": "作业"
+        }
+      }
+    },
+    "Teacher": {
+      "description": "老师",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "中文名"
+        },
+        "english_name":{
+          "type": "string",
+          "description": "英文名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "用户头像"
+        },
+        "email": {
+          "type": "string",
+          "description": "邮箱"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32",
+          "description": "性别(0-男 1-女)"
+        },
+        "teacher_type": {
+          "type": "integer",
+          "format": "int32",
+          "description": "教师类型，0-教师，1-咨询师，2-督导师"
+        },
+        "introduction": {
+          "type": "string",
+          "description": "简介"
+        }
+      }
+    },
+    "Homework": {
+      "description": "作业",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "标题"
+        },
+        "summary": {
+          "type": "string",
+          "description": "概要"
+        },
+        "content": {
+          "type": "string",
+          "description": "内容"
+        }
+      }
+    },
+    "Examination": {
+      "description": " 考试 ",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "考试id"
+        },
+        "image": {
+          "type": "string",
+          "description": "考试图标"
+        },
+        "name": {
+          "type": "string",
+          "description": "考试名称"
+        },
+        "type": {
+          "type": "integer",
+          "format": "int32",
+          "description": "考试类型(0-模拟考试，1-正式考试)"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": "开始时间"
+        },
+        "start_time_txt": {
+          "type": "string",
+          "description": "上课时间"
+        },
+        "end_time_txt": {
+          "type": "string",
+          "description": "下课时间"
+        },
+        "classroom": {
+          "type": "string",
+          "description": "教室"
+        },
+        "remark": {
+          "type": "string",
+          "description": "备注"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32",
+          "description": "分数"
+        },
+        "detail": {
+          "type": "string",
+          "description": "评分详情"
+        },
+        "comment": {
+          "type": "string",
+          "description": "老师评语"
+        },
+        "teacher": {
+          "$ref":"#/definitions/Teacher",
+          "description": "上课老师"
+        }
+      }
+    }
+  }
+}

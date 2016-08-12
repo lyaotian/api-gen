@@ -1,0 +1,28 @@
+//
+//  KWMAPIManager.h
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!DO NOT EDIT!!! Auto generated code !!!DO NOT EDIT!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  Copyright (c) 2015 kollway. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "AFNetworking.h"
+#import "KWMRequestListResult.h"
+#import "KWMRequestResult.h"
+
+#define KWM_PAGE_SIZE                   ${main.pageSize}
+#define API_HOST                        @"${main.host}"
+#define API_HOST_PORT                   ${main.port}
+
+@interface KWMAPIManager : NSObject
+
+@property (nonatomic) NSString *baseUrl;
+
++ (KWMAPIManager *)sharedManager;
+- (NSString *)toAbsoluteUrl:(NSString *)relativeUrl;
+- (NSString *)getSMSAPIToken:(NSString *)phone;
+
+
+@end

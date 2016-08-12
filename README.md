@@ -1,0 +1,3 @@
+## API代码生成工具
+
+读取swagger的API定义json文件，生成iOS和Android端使用的Objective-C或Java代码

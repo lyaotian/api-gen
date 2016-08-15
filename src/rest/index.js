@@ -186,6 +186,8 @@ export class RestModel {
                 return (paramItem['format'] == 'int64') ? 'long' : 'int';
             }else if (inputType == 'string'){
                 return 'String';
+            }else if (inputType == 'file'){
+                return 'TypedFile';
             }
             return inputType;
         }

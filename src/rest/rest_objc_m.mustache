@@ -11,21 +11,10 @@
 #import "KWMStringUtil.h"
 #import "KWMRequestResult.h"
 #import "KWMRequestListResult.h"
-#import "KWMUserDao.h"
-#import "KWMBaseModel.h"
 
-#import "KWMAddress.h"
-#import "KWMAdvertise.h"
-#import "KWMBalldate.h"
-#import "KWMBaseModel.h"
-#import "KWMCity.h"
-#import "KWMMatch.h"
-#import "KWMMatchSchedule.h"
-#import "KWMPhone.h"
-#import "KWMPush.h"
-#import "KWMRanking.h"
-#import "KWMTeam.h"
-#import "KWMUser.h"
+{{#refs}}
+#import "{{objcPrefix}}{{.}}"
+{{/refs}}
 
 typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
     KWMHTTPMethodGET = 0,
@@ -270,5 +259,7 @@ typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
         return @"";
     }
 }
+
+{{{code}}}
 
 @end

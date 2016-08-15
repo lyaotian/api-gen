@@ -16,6 +16,10 @@
 #define API_HOST                        @"${main.host}"
 #define API_HOST_PORT                   ${main.port}
 
+{{#refs}}
+@class "{{objcPrefix}}{{.}}";
+{{/refs}}
+
 @interface KWMAPIManager : NSObject
 
 @property (nonatomic) NSString *baseUrl;
@@ -24,5 +28,6 @@
 - (NSString *)toAbsoluteUrl:(NSString *)relativeUrl;
 - (NSString *)getSMSAPIToken:(NSString *)phone;
 
+{{{code}}}
 
 @end

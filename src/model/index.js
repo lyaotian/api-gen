@@ -63,7 +63,7 @@ export class GenModel {
         if (inputType == 'array'){
             return 'ArrayList<' + p.gencricType + '>';
         }else if (inputType == 'integer' || inputType == 'number'){
-            return 'int';
+            return (p['format'] == 'int64') ? 'long' : 'int';
         }else if (inputType == 'string'){
             return 'String';
         }
@@ -96,9 +96,9 @@ export class GenModel {
                             doc: pItem.description
                         };
                     }
-                )
+                ).filter((p) => {return p.name != 'id'})
             };
-        })
+        }).filter((model) => {return model.name != 'BaseModel'});
     }
 
     launch(){
@@ -113,7 +113,9 @@ export class GenModel {
             _m.properties = m.properties.map(
                 (p) => {
                     if (p.refType || p.gencricType){
-                        _m.refs.push(p.refType);
+                        if (p.refType != 'BaseModel'){
+                            _m.refs.push(p.refType);
+                        }
                     }
                     return Object.assign({}, p, {type: this.toJavaPropertyType(p)});
                 }

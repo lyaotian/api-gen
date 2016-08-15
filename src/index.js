@@ -10,6 +10,9 @@ const config = {
     port: 8081,
 };
 
-// new GenModel(config).launch();
-new RestModel(config).launch();
-// console.log(Utils.toCamelName('_aa_bb_cc_dd_', '_'));
+try {
+    new GenModel(config).launch();
+    new RestModel(config).launch();
+}catch(e){
+    console.warn('生成失败:'+e.message+'\n请检查swagger json的格式');
+}

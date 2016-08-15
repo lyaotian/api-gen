@@ -77,7 +77,7 @@ const itemObjcM = `
                         filePaths:{{#isUpload}}filePath{{/isUpload}}{{^isUpload}}nil{{/isUpload}}
                     jsonParameter:NO
                            result:[KWMRequest{{#isList}}List{{/isList}}Result class]
-                            model:[KWMBaseModel class]
+                            model:[KWM{{responseType}} class]
                           success:success
                           failure:failure];
 }
@@ -98,9 +98,9 @@ const itemJava = `
     @{{method}}("{{{path}}}")
     void {{name}}(
             {{#parameters}}
-            @{{parameterMethod}}("{{name}}") {{type}} phone,
+            @{{parameterMethod}}("{{name}}") {{parameterType}} {{name}},
             {{/parameters}}
-            Callback<Request{{#isList}}List{{/isList}}Result<RspModel>> callback
+            Callback<Request{{#isList}}List{{/isList}}Result<{{responseType}}>> callback
     );
   {{/apis}}
 `;
@@ -113,12 +113,6 @@ export class RestModel {
         this.config = Object.assign(config,{
             apis: this.getAPIs()
         });
-    }
-
-    toObjcPropertyType(p = property){
-    }
-
-    toJavaPropertyType(p = property){
     }
 
     getAPIs(){
@@ -162,7 +156,17 @@ export class RestModel {
         result = result.filter((v) => {return v != null;});
         return result;
     }
-
+    
+    getRefList(apis, isJava = true) {
+        let allRef = apis.map(
+        (api) => {
+            return api.responseType
+        });
+        if (isJava){
+            allRef = allRef.filter((type) => {return type != 'BaseModel'});
+        }
+        return Array.from(new Set(allRef));
+    }
     genJavaCode(dir){
         let getParameterMethod = (api) => {
             if (api.method == 'POST'){
@@ -176,45 +180,62 @@ export class RestModel {
             }
             return '';
         }
+        let getParamType = (paramItem) => {
+            let inputType = paramItem.type;
+            if(inputType == 'integer' || inputType == 'number'){
+                return (paramItem['format'] == 'int64') ? 'long' : 'int';
+            }else if (inputType == 'string'){
+                return 'String';
+            }
+            return inputType;
+        }
         let javaConfig = Object.assign({}, this.config);
         javaConfig.apis = javaConfig.apis.map((apiItem) => {
             let result = Object.assign(apiItem, {
                 methodAnnotation: getMethodAnnotation(apiItem),
-                parameters: apiItem.parameters.map((paramItem) => {return Object.assign(paramItem, {parameterMethod: getParameterMethod(apiItem)})})
+                parameters: apiItem.parameters.map(
+                    (paramItem) => {
+                        return Object.assign(paramItem, {
+                            parameterMethod: getParameterMethod(apiItem),
+                            parameterType: getParamType(paramItem)
+                        })
+                    })
             });
             return result;
         });
 
         let value = mustache.render(itemJava, javaConfig);
         let otherCode = fs.readFileSync('./src/rest/rest_java.mustache', 'utf8');
-        value = mustache.render(otherCode, {code: value});
+        value = mustache.render(otherCode, {
+            pageSize: this.config.pageSize,
+            host: this.config.host,
+            port: this.config.port,
+            packageName: this.config.packageName,
+            refs: this.getRefList(this.config.apis, true),
+            code: value
+        });
         fs.writeFileSync('./' + dir + '/REST.java', value);
     }
 
     genObjcCode(dir){
-        let getRefList = (apis) => {
-            let allRef = apis.map(
-                (api) => {
-                    return api.responseType
-                });
-            return Array.from(new Set(allRef));
-        }
 
-        let value = mustache.render(itemObjcH, this.config);
         let otherConfig = {
+            pageSize: this.config.pageSize,
+            host: this.config.host,
+            port: this.config.port,
             objcPrefix: this.config.objcPrefix, 
-            code: value, 
-            refs: getRefList(this.config.apis)
+            refs: this.getRefList(this.config.apis, false)
         };
 
-        let otherCodeH = fs.readFileSync('./src/rest/rest_objc_h.mustache', 'utf8');
-        value = mustache.render(otherCodeH, otherConfig);
-        fs.writeFileSync('./' + dir + '/KWMAPIManager.h', value);
+        let value = mustache.render(itemObjcH, this.config);
+        let codeHtmp = fs.readFileSync('./src/rest/rest_objc_h.mustache', 'utf8');
+        let codeH = mustache.render(codeHtmp, Object.assign(otherConfig, {code: value}));
+        fs.writeFileSync('./' + dir + '/KWMAPIManager.h', codeH);
 
         value = mustache.render(itemObjcM, this.config);
-        let otherCodeM = fs.readFileSync('./src/rest/rest_objc_m.mustache', 'utf8');
-        value = mustache.render(otherCodeM, otherConfig);
-        fs.writeFileSync('./' + dir + '/KWMAPIManager.m', value);
+        let codeMtmp = fs.readFileSync('./src/rest/rest_objc_m.mustache', 'utf8');
+        let codeM = mustache.render(codeMtmp, Object.assign(otherConfig, {code: value}));
+        fs.writeFileSync('./' + dir + '/KWMAPIManager.m', codeM);
     }
 
     launch(){

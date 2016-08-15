@@ -7,13 +7,14 @@
 //
 
 #import "KWMAPIManager.h"
-#import <ACS/ACS.h>
 #import "KWMStringUtil.h"
 #import "KWMRequestResult.h"
 #import "KWMRequestListResult.h"
+#import "ACS.h"
+#import "KWMUserDao.h"
 
 {{#refs}}
-#import "{{objcPrefix}}{{.}}"
+#import "{{objcPrefix}}{{.}}.h"
 {{/refs}}
 
 typedef NS_ENUM(NSInteger, KWMHTTPMethod) {

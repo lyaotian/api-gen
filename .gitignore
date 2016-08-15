@@ -4,3 +4,4 @@ npm-debug.log
 bin/
 code_output/
 copy.sh
+clean.sh

@@ -1,4 +1,3 @@
-module.exports = 
 {
   "swagger": "2.0",
   "info": {
@@ -43,6 +42,63 @@ module.exports =
     "application/json"
   ],
   "paths": {
+    "/StudentApi/login": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "登录[完成]",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "密码",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Student"
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/chooseAvatar": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "修改学生头像[完成]",
+        "parameters": [
+          {
+            "name": "avatar",
+            "in": "formData",
+            "description": "头像",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Student"
+            }
+          }
+        }
+      }
+    },
     "/StudentApi/scheduleList": {
       "get": {
         "tags": [
@@ -50,14 +106,6 @@ module.exports =
         ],
         "summary": "根据日期获取课程、考试、活动、约谈信息[完成]",
         "parameters": [
-          {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32"
-          },
           {
             "name": "date",
             "in": "query",
@@ -87,14 +135,6 @@ module.exports =
         "summary": "根据月份获取一个月内有课程、考试、活动、约谈的日期[完成]",
         "parameters": [
           {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32 "
-          },
-          {
             "name": "date",
             "in": "query",
             "description": "日期,格式为xxxx-xx",
@@ -123,14 +163,6 @@ module.exports =
         "summary": "获取一个月内的繁忙日期信息[完成]",
         "parameters": [
           {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32 "
-          },
-          {
             "name": "date",
             "in": "query",
             "description": "日期,格式为xxxx-xx,如2016-09",
@@ -151,6 +183,31 @@ module.exports =
         }
       }
     },
+    "/StudentApi/averageScore": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "根据月份获取这个月和上个月的平均分[完成]",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "日期,格式为xxxx-xx,如2016-09",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Student"
+            }
+          }
+        }
+      }
+    },
     "/StudentApi/addBusyDate": {
       "post": {
         "tags": [
@@ -159,13 +216,30 @@ module.exports =
         "summary": "添加繁忙日期信息[完成]",
         "parameters": [
           {
-            "name": "student_id",
+            "name": "date",
             "in": "query",
-            "description": "学生id",
+            "description": "日期,格式为xxxx-xx-xx",
             "required": true,
-            "type": "number",
-            "format": "int32 "
-          },
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BaseModel"
+            }
+          }
+        }
+      }
+    },
+    "/StudentApi/cancelBusyDate": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "添加繁忙日期信息[完成]",
+        "parameters": [
           {
             "name": "date",
             "in": "query",
@@ -191,14 +265,6 @@ module.exports =
         ],
         "summary": "获取课程详情[完成]",
         "parameters": [
-          {
-            "name": "course_id",
-            "in": "query",
-            "description": "课程id",
-            "required": true,
-            "type": "number",
-            "format": "int32 "
-          },
           {
             "name": "student_id",
             "in": "query",
@@ -232,14 +298,6 @@ module.exports =
             "required": true,
             "type": "number",
             "format": "int32 "
-          },
-          {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32"
           }
         ],
         "responses": {
@@ -292,14 +350,6 @@ module.exports =
             "required": true,
             "type": "number",
             "format": "int32 "
-          },
-          {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32"
           }
         ],
         "responses": {
@@ -319,14 +369,6 @@ module.exports =
         ],
         "summary": "改期请假申请[完成]",
         "parameters": [
-          {
-            "name": "student_id",
-            "in": "query",
-            "description": "学生id",
-            "required": true,
-            "type": "number",
-            "format": "int32"
-          },
           {
             "name": "target_id",
             "in": "query",
@@ -401,14 +443,6 @@ module.exports =
         ],
         "summary": "学生信息(我的)[完成]",
         "parameters": [
-          {
-            "name": "student_id",
-            "description": "学生id",
-            "in": "query",
-            "required": true,
-            "type": "number",
-            "format": "int64"
-          }
         ],
         "responses": {
           "200": {
@@ -420,7 +454,59 @@ module.exports =
         }
       }
     },
-
+    "/TeacherApi/login": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "登录[完成]",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "密码",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Teacher"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/listStudents":{
+      "get": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary":"学生列表[完成]",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/Student"
+              }
+            }
+          }
+        }
+      }
+    },
     "/TeacherApi/scheduleList": {
       "get": {
         "tags": [
@@ -450,7 +536,7 @@ module.exports =
             "schema":{
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TeacherSchedule"
+                "$ref": "#/definitions/Schedule"
               }
             }
           }
@@ -464,14 +550,6 @@ module.exports =
         ],
         "summary": "根据月份获取一个月内有课程、考试、活动、约谈的日期[完成]",
         "parameters": [
-          {
-            "name": "teacher_id",
-            "in": "query",
-            "description": "老师id",
-            "required": true,
-            "type": "number",
-            "format": "int32 "
-          },
           {
             "name": "date",
             "in": "query",
@@ -545,32 +623,6 @@ module.exports =
         }
       }
     },
-    "/TeacherApi/activityDetail": {
-      "get": {
-        "tags": [
-          "Teacher"
-        ],
-        "summary": "获取活动详情",
-        "parameters": [
-          {
-            "name": "activity_id",
-            "in": "query",
-            "description": " 活动id",
-            "required": true,
-            "type": "number",
-            "format": "int32 "
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/Activity"
-            }
-          }
-        }
-      }
-    },
     "/TeacherApi/meetingDetail": {
       "get": {
         "tags": [
@@ -597,22 +649,211 @@ module.exports =
         }
       }
     },
+    "/TeacherApi/setHomework": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "布置作业和评分",
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "query",
+            "description": "课程id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description": "作业内容",
+            "type": "string"
+          },
+          {
+            "name": "scores",
+            "in": "query",
+            "description":"json字符串，示例:http://boyu.kollway.com/json/request/setHomework.json",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BaseModel"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/writeExamGrade": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "填写考试成绩",
+        "parameters": [
+          {
+            "name": "examination_id",
+            "in": "query",
+            "description": "考试id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "exam_info",
+            "in": "query",
+            "description":"json字符串，示例:http://boyu.kollway.com/json/request/writeExam.json",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BaseModel"
+            }
 
-    "/PlanApi/getPlan": {
+          }
+        }
+      }
+    },
+    "/TeacherApi/submitMeeting": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "提交约谈信息",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "description": "约谈id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "meeting_info",
+            "in": "query",
+            "description":"json字符串，示例:http://boyu.kollway.com/json/request/submitMeeting.json",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BaseModel"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/sendNews": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "发送推送消息",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "推送标题",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description":"推送内容",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/BaseModel"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/listHistoryNews": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "学生历史推送消息",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "学生id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Push"
+            }
+          }
+        }
+      }
+    },
+    "/TeacherApi/confirmPlan": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "确定规划",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "query",
+            "description": "规划id",
+            "required": true,
+            "type": "number",
+            "format": "int32 "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Push"
+            }
+          }
+        }
+      }
+    },
+
+    "/PlanApi/listPlan": {
       "get": {
         "tags": [
           "Plan"
         ],
-        "summary": "获取学生规划[完成]",
+        "summary": "获取学生规划列表[完成]",
         "parameters": [
-          {
-            "name": "student_id",
-            "description": "学生id",
-            "type": "number",
-            "format": "int32",
-            "in": "query",
-            "required": true
-          }
         ],
         "responses": {
           "200": {
@@ -627,7 +868,7 @@ module.exports =
         }
       }
     },
-    "/PlanApi/getPlanInfo": {
+    "/PlanApi/planInfo": {
       "get": {
         "tags": [
           "Plan"
@@ -694,22 +935,6 @@ module.exports =
             "format":"int32",
             "in":"query",
             "required":true
-          },
-          {
-            "name":"page",
-            "description":"页数",
-            "type":"number",
-            "format":"int64",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"server_time",
-            "description":"服务器时间(服务器返回)",
-            "type":"number",
-            "format":"int64",
-            "in":"query",
-            "required":false
           }
         ],
         "responses": {
@@ -829,20 +1054,17 @@ module.exports =
         "message": {
           "type": "string",
           "description": "描述信息"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "id"
         }
       }
     },
     "Schedule": {
       "description": "日期对应的课程、考试、活动、约谈列表",
-      "required": [
-        "student_id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "对应的课程、考试、活动或约谈id"
-        },
         "type": {
           "type": "integer",
           "format": "int32",
@@ -871,44 +1093,6 @@ module.exports =
         "teacher": {
           "type": "string",
           "description": "老师英文名"
-        }
-      }
-    },
-    "TeacherSchedule": {
-      "description": "日期对应的课程、考试、活动、约谈列表",
-      "required": [
-        "student_id"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "对应的课程、考试、活动或约谈id"
-        },
-        "type": {
-          "type": "integer",
-          "format": "int32",
-          "description": "类型,0-课程,1-考试,2-活动,3-约谈"
-        },
-        "image": {
-          "type": "string",
-          "description": "课程、考试、活动或约谈图标"
-        },
-        "name": {
-          "type": "string",
-          "description": "课程、考试、活动或约谈名称"
-        },
-        "start_time_txt": {
-          "type": "string",
-          "description": "课程、考试、活动或约谈开始时间"
-        },
-        "end_time_txt": {
-          "type": "string",
-          "description": "课程、考试、活动或约谈结束时间"
-        },
-        "classroom": {
-          "type": "string",
-          "description": "教室"
         },
         "student_number": {
           "type": "integer",
@@ -919,15 +1103,7 @@ module.exports =
     },
     "Course": {
       "description": "课程信息",
-      "required": [
-        "course_id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "课程id"
-        },
         "image": {
           "type": "string",
           "description": "课程版头图"
@@ -989,29 +1165,21 @@ module.exports =
           "description": "上课老师"
         },
         "homework": {
-          "$ref":"#/definitions/Homework",
-          "description": "作业"
+          "type": "string",
+          "description": "家庭作业"
         },
-        "students": {
+        "course_students": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Student"
           },
-          "description": "该课程学生列表,只有教师API才有"
+          "description": "该课程学生列表"
         }
       }
     },
     "Student": {
       "description": "学生",
-      "required": [
-        "id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID"
-        },
         "name": {
           "type": "string",
           "description": "中文名"
@@ -1039,23 +1207,27 @@ module.exports =
           "description": "本月评分"
         },
         "last_score": {
-          "type": "float",
-          "format": "float32",
-          "description": "上个月评分"
+            "type": "float",
+            "format": "float32",
+            "description": "上个月评分"
+          },
+        "detail": {
+          "type": "string",
+          "description": "考试成绩详情"
+        },
+        "comment": {
+          "type": "string",
+          "description": "考试老师评语"
+        },
+        "summary": {
+          "type": "string",
+          "description": "约谈小结"
         }
       }
     },
     "Teacher": {
       "description": "老师",
-      "required": [
-        "id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID"
-        },
         "name": {
           "type": "string",
           "description": "中文名"
@@ -1108,11 +1280,6 @@ module.exports =
     "Examination": {
       "description": " 考试 ",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "考试id"
-        },
         "image": {
           "type": "string",
           "description": "考试图标"
@@ -1163,17 +1330,19 @@ module.exports =
         "teacher": {
           "$ref":"#/definitions/Teacher",
           "description": "上课老师"
+        },
+        "exam_students": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Student"
+          },
+          "description": "考试的学生"
         }
       }
     },
     "Activity": {
       "description": "活动",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "活动id"
-        },
         "icon": {
           "type": "string",
           "description": "活动图标"
@@ -1216,11 +1385,6 @@ module.exports =
     "Meeting": {
       "description": "约谈",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 约谈id"
-        },
         "image": {
           "type": "string",
           "description": "封面图"
@@ -1257,20 +1421,19 @@ module.exports =
         "summary": {
           "type": "string",
           "description": "约谈小结"
+        },
+        "meeting_students": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Student"
+          },
+          "description": "考试的学生"
         }
       }
     },
     "Push": {
       "description": "推送",
-      "required": [
-        "id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID"
-        },
         "title": {
           "type": "string",
           "description": "标题"
@@ -1296,16 +1459,8 @@ module.exports =
     },
     "Plan": {
       "description": "规划",
-      "required": [
-        "id"
-      ],
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID"
-        },
-        "plan_id": {
           "type": "integer",
           "format": "int32",
           "description": "规划表id"
@@ -1314,38 +1469,91 @@ module.exports =
           "type": "string",
           "description": "标题"
         },
-        "pid": {
-          "type": "integer",
-          "format": "int64",
-          "description": "父规划id"
+        "student_background": {
+          "type": "string",
+          "description": "学生背景"
         },
-        "level": {
+        "plan_target": {
+          "type": "string",
+          "description": "规划目标"
+        },
+        "finished_schedule": {
           "type": "integer",
           "format": "int32",
-          "description": "规划层级，(0-1级，1-2级，2-3级)，最多3级"
+          "description": "规划当前总进度"
+        },
+        "main_plan": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MainPlan"
+          },
+          "description": "一级规划"
+        }
+      }
+    },
+    "MainPlan": {
+      "description": "一级规划",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "一级规划id"
+        },
+        "title": {
+          "type": "string",
+          "description": "一级规划标题"
         },
         "schedule": {
           "type": "integer",
           "format": "int32",
-          "description": "规划进度"
+          "description": "一级规划总进度"
+        },
+        "finished_schedule": {
+          "type": "integer",
+          "format": "int32",
+          "description": "规划当前完成的总进度"
+        },
+        "sub_plan": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubPlan"
+          },
+          "description": "二级规划"
+        }
+      }
+    },
+    "SubPlan": {
+      "description": "二级规划",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "二级规划id"
+        },
+        "title": {
+          "type": "string",
+          "description": "二级规划标题"
+        },
+        "schedule": {
+          "type": "integer",
+          "format": "int32",
+          "description": "二级规划进度"
+        },
+        "is_finished": {
+          "type": "integer",
+          "format": "int32",
+          "description": "是否已完成,0-未完成,1-已完成"
         },
         "finish_time": {
-          "type": "string",
-          "description": "完成时间的时间戳"
+          "type": "integer",
+          "format": "int32",
+          "description": "完成日期,如2016年8月12日,未完成为0"
         }
       }
     },
     "PlanInfo": {
       "description": "规划详情",
-      "required": [
-        "id"
-      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID"
-        },
         "plan_id": {
           "type": "integer",
           "format": "int32",
@@ -1370,7 +1578,8 @@ module.exports =
           "description": "0-未完成,1-已完成"
         },
         "finish_time": {
-          "type": "string",
+          "type": "integer",
+          "format": "int32",
           "description": "完成时间的时间戳"
         }
       }
@@ -1379,32 +1588,23 @@ module.exports =
       "description": "一个月内有课程、考试、、活动、约谈的日期[完成]",
       "properties": {
         "course": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          },
-          "description": "一个月内有课程的日期的整数数组"
+          "type": "string",
+          "description": "一个月内有课程的日期的整数数组字符串(例如12,21,30)"
         },
         "exam": {
-          "type": "array",
+          "type": "string",
           "items": {
             "type": "integer"
           },
-          "description": "一个月内有考试的日期的整数数组"
+          "description": "一个月内有考试的日期的整数字符串(例如12,21,30)"
         },
         "activity": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          },
-          "description": "一个月内有活动的日期的整数数组"
+          "type": "string",
+          "description": "一个月内有活动的日期的整数数组字符串(例如12,21,30)"
         },
         "meeting": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          },
-          "description": "一个月内有约谈的日期的整数数组"
+          "type": "string",
+          "description": "一个月内有约谈的日期的整数数组字符串(例如12,21,30)"
         }
       }
     }

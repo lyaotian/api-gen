@@ -9,7 +9,13 @@
 #import "KWMBaseModel.h"
 
 {{#refs}}
-#import "{{prefix}}{{{.}}}.h"
+  {{#refType}}
+@class {{prefix}}{{{.}}};
+  {{/refType}}
+
+  {{#gencricType}}
+@protocol {{prefix}}{{{.}}};
+  {{/gencricType}}
 {{/refs}}
 
 @protocol {{prefix}}{{name}} <NSObject>

@@ -12,7 +12,6 @@
  *  6. 引用其它类(java:import,objc:#import)
  *  7. 上传文件API
  */
-import api_data from '../swagger.json.js'
 import { Utils } from '../utils'
 import fs from 'fs';
 import mustache from 'mustache';
@@ -39,6 +38,9 @@ const itemObjcH = `
 {{#apis}}
 /**
  * {{doc}}
+{{#parameters}}
+ * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
+{{/parameters}}
  **/
 - (NSURLSessionDataTask *){{name}}:(NSDictionary *)parameters
                         {{#isUpload}}
@@ -53,6 +55,9 @@ const itemObjcM = `
 {{#apis}}
 /**
  * {{doc}}
+{{#parameters}}
+ * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
+{{/parameters}}
  **/
 - (NSURLSessionDataTask *){{name}}:(NSDictionary *)parameters
                                    {{#isUpload}}
@@ -65,7 +70,7 @@ const itemObjcM = `
     NSAssert(parameters[@"{{name}}"], @"required parameter: {{name}}");
         {{/isRequired}}
     {{/parameters}}
-    
+
     {{#isList}}
     parameters = [self processListAPIParameters:parameters];
     {{/isList}}
@@ -89,6 +94,9 @@ const itemJava = `
     /**
      * {{doc}}
      *
+       {{#isList}}
+     * @param page 页数
+       {{/isList}}
        {{#parameters}}
      * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
        {{/parameters}}
@@ -97,8 +105,11 @@ const itemJava = `
     {{methodAnnotation}}
     @{{method}}("{{{path}}}")
     void {{name}}(
+            {{#isList}}
+            @Query("page") int page,
+            {{/isList}}
             {{#parameters}}
-            @{{parameterMethod}}("{{name}}") {{parameterType}} {{name}},
+            @{{parameterMethod}}({{#fieldName}}"{{.}}"{{/fieldName}}) {{{parameterType}}} {{name}},
             {{/parameters}}
             Callback<Request{{#isList}}List{{/isList}}Result<{{responseType}}>> callback
     );
@@ -116,6 +127,7 @@ export class RestModel {
     }
 
     getAPIs(){
+        const api_data = require('fs-extra').readJsonSync('./src/api-docs.json');
         let paths = Object.keys(api_data.paths);
 
         let result = paths.map(
@@ -156,7 +168,7 @@ export class RestModel {
         result = result.filter((v) => {return v != null;});
         return result;
     }
-    
+
     getRefList(apis, isJava = true) {
         let allRef = apis.map(
         (api) => {
@@ -187,7 +199,7 @@ export class RestModel {
             }else if (inputType == 'string'){
                 return 'String';
             }else if (inputType == 'file'){
-                return 'TypedFile';
+                return 'Map<String, RequestBody>';
             }
             return inputType;
         }
@@ -196,9 +208,16 @@ export class RestModel {
             let result = Object.assign(apiItem, {
                 methodAnnotation: getMethodAnnotation(apiItem),
                 parameters: apiItem.parameters.map(
-                    (paramItem) => {
+                    (paramItem, i) => {
+                        let name = paramItem.name;
+                        let method = getParameterMethod(apiItem);
+                        if (method == 'Part' && i == apiItem.parameters.length - 1){
+                            method = 'PartMap';
+                            name = null;
+                        }
                         return Object.assign(paramItem, {
-                            parameterMethod: getParameterMethod(apiItem),
+                            fieldName: name,
+                            parameterMethod: method,
                             parameterType: getParamType(paramItem)
                         })
                     })
@@ -225,7 +244,7 @@ export class RestModel {
             pageSize: this.config.pageSize,
             host: this.config.host,
             port: this.config.port,
-            objcPrefix: this.config.objcPrefix, 
+            objcPrefix: this.config.objcPrefix,
             refs: this.getRefList(this.config.apis, false)
         };
 

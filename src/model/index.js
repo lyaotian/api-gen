@@ -10,7 +10,7 @@
  *  4. (ok)属性字段转驼峰式命名
  *  5. (ok)Java泛型/Objc protocol
  */
-import api_data from '../swagger.json.js'
+
 import { Utils } from '../utils'
 import fs from 'fs';
 import mustache from 'mustache';
@@ -70,6 +70,7 @@ export class GenModel {
         return inputType;
     }
     getModels() {
+        const api_data = require('fs-extra').readJsonSync('./src/api-docs.json');
         let models = Object.keys(api_data.definitions);
         return models.map((key) => {
             let m = api_data.definitions[key];
@@ -138,9 +139,13 @@ export class GenModel {
             _m.gencrics = [];
             _m.properties = _m.properties.map(
                 (p) => {
-                    if (p.refType || p.gencricType){
-                        _m.refs.push(p.refType);
+                    if (p.refType && !p.gencricType){
+                        _m.refs.push({refType: p.refType});
                     }
+                    if (p.gencricType){
+                        _m.refs.push({gencricType: p.gencricType});
+                    }
+
                     return Object.assign({}, p, {type: this.toObjcPropertyType(p)})
                 }
             );

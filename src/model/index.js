@@ -44,10 +44,8 @@ export class GenModel {
     //convert to objc type
     toObjcPropertyType(p = property){
         let inputType = p.type;
-        if (inputType == 'int' || inputType == 'integer' || inputType == 'number' || inputType == 'long'){
-            return 'NSInteger';
-        }else if (inputType == 'float' || inputType == 'double'){
-            return 'CGFloat';
+        if (inputType == 'number'){
+            return Utils.getNumberType(p.format, true);
         }else if (inputType == 'array'){
             return 'NSArray<' + this.config.objcPrefix + p.gencricType + '> *';
         }else if (inputType == 'string'){
@@ -62,8 +60,8 @@ export class GenModel {
         let inputType = p.type;
         if (inputType == 'array'){
             return 'ArrayList<' + p.gencricType + '>';
-        }else if (inputType == 'integer' || inputType == 'number'){
-            return (p['format'] == 'int64') ? 'long' : 'int';
+        }else if (inputType == 'number'){
+            return Utils.getNumberType(p.format, false);
         }else if (inputType == 'string'){
             return 'String';
         }
@@ -91,6 +89,7 @@ export class GenModel {
                         return {
                             name: Utils.toCamelName(k, '_'),
                             type: pItem.type || refType,
+                            format: pItem.format,
                             gencricType: isArray ? refType : null,
                             refType: refType,
                             isArray: isArray,

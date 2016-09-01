@@ -94,24 +94,17 @@ const itemJava = `
     /**
      * {{doc}}
      *
-       {{#isList}}
-     * @param page 页数
-       {{/isList}}
        {{#parameters}}
-     * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
+     * @param {{name}}{{^isRequired}}(可选)    {{/isRequired}} {{{doc}}}
        {{/parameters}}
-     * @param callback
+     * @return Call
      */
     {{methodAnnotation}}
     @{{method}}("{{{path}}}")
-    void {{name}}(
-            {{#isList}}
-            @Query("page") int page,
-            {{/isList}}
+    Call<Request{{#isList}}List{{/isList}}Result<{{responseType}}>> {{name}}(
             {{#parameters}}
-            @{{parameterMethod}}({{#fieldName}}"{{.}}"{{/fieldName}}) {{{parameterType}}} {{name}},
+            @{{parameterMethod}}({{#fieldName}}"{{.}}"{{/fieldName}}) {{{parameterType}}} {{name}}{{^last}},{{/last}}
             {{/parameters}}
-            Callback<Request{{#isList}}List{{/isList}}Result<{{responseType}}>> callback
     );
   {{/apis}}
 `;
@@ -142,9 +135,19 @@ export class RestModel {
                     return null;
                 }
                 let isList = response.type == 'array';
-
                 let responseType = Utils.getRefType(isList ? response.items.$ref : response.$ref);
                 let path = key;
+
+                if (isList){
+                    content.parameters.splice(0, 0, {
+                        name: 'page',
+                        description: '页数',
+                        type: 'number',
+                        format: 'int32',
+                        in: 'Query',
+                        required: true
+                    });
+                }
 
                 return {
                     doc: content.summary,
@@ -154,12 +157,14 @@ export class RestModel {
                     isList: isList,
                     isUpload: content.parameters.some((p) => {return p.type == 'file'}),
                     responseType: responseType,
-                    parameters: content.parameters.map((p) => {
+                    parameters: content.parameters.map((p, i) => {
                         return {
                             name: p.name,
                             doc: p.description,
                             type: p.type,
-                            isRequired: p.required
+                            format: p.format,
+                            isRequired: p.required,
+                            last: (i >= content.parameters.length-1)
                         }
                     })
                 };
@@ -194,8 +199,8 @@ export class RestModel {
         }
         let getParamType = (paramItem) => {
             let inputType = paramItem.type;
-            if(inputType == 'integer' || inputType == 'number'){
-                return (paramItem['format'] == 'int64') ? 'long' : 'int';
+            if(inputType == 'number'){
+                return Utils.getNumberType(paramItem.format, false);
             }else if (inputType == 'string'){
                 return 'String';
             }else if (inputType == 'file'){

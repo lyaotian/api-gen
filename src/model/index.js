@@ -35,9 +35,15 @@ const model = {
 export class GenModel {
 
     constructor(config = {}){
+        const fileName = './src/api-docs.json';
+        const fs = require('fs-extra');
+        if (!fs.existsSync(fileName)){
+            throw new Error("api-docs.json doesn't exists!");
+        }
+        const api_data = fs.readJsonSync(fileName);
         //create mustache data.json
         this.config = Object.assign(config,{
-            models: this.getModels()
+            models: this.getModels(api_data)
         });
     }
 
@@ -67,8 +73,7 @@ export class GenModel {
         }
         return inputType;
     }
-    getModels() {
-        const api_data = require('fs-extra').readJsonSync('./src/api-docs.json');
+    getModels(api_data) {
         let models = Object.keys(api_data.definitions);
         return models.map((key) => {
             let m = api_data.definitions[key];
@@ -157,6 +162,6 @@ export class GenModel {
             fs.writeFileSync(path_m, value_m);
         });
 
-        console.log('model code gen finished!!');
+        console.log('Model code were generated to dir \'./code_output\' successfully!!');
     }
 }

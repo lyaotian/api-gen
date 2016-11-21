@@ -113,14 +113,19 @@ const itemJava = `
 export class RestModel {
 
     constructor(config = {}){
+        const fileName = './src/api-docs.json';
+        const fs = require('fs-extra');
+        if (!fs.existsSync(fileName)){
+            throw new Error("api-docs.json doesn't exists!");
+        }
+        const api_data = fs.readJsonSync(fileName);
         //create mustache data.json
         this.config = Object.assign(config,{
-            apis: this.getAPIs()
+            apis: this.getAPIs(api_data)
         });
     }
 
-    getAPIs(){
-        const api_data = require('fs-extra').readJsonSync('./src/api-docs.json');
+    getAPIs(api_data){
         let paths = Object.keys(api_data.paths);
 
         let result = paths.map(
@@ -268,6 +273,6 @@ export class RestModel {
         this.genJavaCode('code_output/java');
         this.genObjcCode('code_output/objc');
 
-        console.log('rest code gen finished!!');
+        console.log('REST API code were generated to dir \'./code_output\' successfully!!');
     }
 }

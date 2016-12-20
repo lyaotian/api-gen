@@ -11,7 +11,7 @@
 #import "KWMRequestResult.h"
 #import "KWMRequestListResult.h"
 #import "ACS.h"
-#import "KWMUserDao.h"
+#import "{{targetName}}-Swift.h"
 
 {{#refs}}
 #import "{{objcPrefix}}{{.}}.h"
@@ -129,7 +129,6 @@ typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
 
     switch (responseCode){
         case 1: {
-            [[KWMUserDao shareDao] logout];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"KWMReceiverNoLogin" object:requestResult];
             break;
         }
@@ -151,7 +150,7 @@ typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
         sessionManager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:0];
     }
 
-    [[KWMUserDao shareDao] checkSession];
+    [[UserDao sharedInstance] checkSession];
     sessionManager.requestSerializer.HTTPShouldHandleCookies = YES;
 
     sessionManager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
@@ -202,15 +201,15 @@ typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
                                               error:nil];
                 }
             }
-        } success:successCallback failure:failure];
+        } progress:nil success:successCallback failure:failure];
     }
 
     switch (httpMethod) {
         case KWMHTTPMethodGET:{
-            return [sessionManager GET:apiPath parameters:mutableParameters success:successCallback failure:failure];
+            return [sessionManager GET:apiPath parameters:mutableParameters progress:nil success:successCallback failure:failure];
         }
         case KWMHTTPMethodPOST:{
-            return [sessionManager POST:apiPath parameters:mutableParameters success:successCallback failure:failure];
+            return [sessionManager POST:apiPath parameters:mutableParameters progress:nil success:successCallback failure:failure];
         }
         case KWMHTTPMethodPUT:{
             return [sessionManager PUT:apiPath parameters:mutableParameters success:successCallback failure:failure];

@@ -5,3 +5,4 @@ bin/
 code_output/
 copy.sh
 clean.sh
+.idea

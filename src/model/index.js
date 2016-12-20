@@ -53,11 +53,11 @@ export class GenModel {
         if (inputType == 'number'){
             return Utils.getNumberType(p.format, true);
         }else if (inputType == 'array'){
-            return 'NSArray<' + this.config.objcPrefix + p.gencricType + '> *';
+            return 'NSArray<' + this.config.objcPrefix + p.gencricType + '> * _Nullable';
         }else if (inputType == 'string'){
-            return 'NSString *';
+            return 'NSString * _Nullable';
         }else if (p.refType) {
-            return this.config.objcPrefix + inputType + ' *'
+            return this.config.objcPrefix + inputType + ' * _Nullable'
         }
         return this.config.objcPrefix + inputType;
     }

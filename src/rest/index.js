@@ -255,6 +255,7 @@ export class RestModel {
             host: this.config.host,
             port: this.config.port,
             objcPrefix: this.config.objcPrefix,
+            targetName: this.config.targetName,
             refs: this.getRefList(this.config.apis, false)
         };
 

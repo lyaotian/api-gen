@@ -4,24 +4,40 @@ import { Utils } from './utils'
 
 const fs = require('fs-extra');
 const config = {
-    url: 'http://apidoc.kollway.com/project/ballsoul-api-docs.json_',
-    packageName: "com.kollway.android.ballsoul",
+    url: 'http://kollway-kollway.oschina.io/api-doc/project/shells-api-docs.json',
+    packageName: "com.kollway.shells",
+    targetName: "iShells",
+    host: "shells.kollway.com",
     objcPrefix: "KWM",
     pageSize: 20,
-    host: "ballsoul.kollway.com",
     port: 80,
     apiDir: {
-        java: '../android/app/src/main/java/com/kollway/bleducation/api',
-        objc: '../ios/BLEducation/Main/Classes/API'
+      java: '../android/app/src/main/java/com/kollway/shells/api',
+      objc: '../ios/iShells/Classes/API'
     }
 };
 
 //复制代码到项目
 function copyToMyProject() {
+
+}
+
+function doWork() {
+    //创建目录
+    let outDir = './code_output';
+    let modelDirJava = outDir + '/java/model';
+    let modelDirObjc = outDir + '/objc/model';
+    fs.removeSync(outDir);
+    fs.ensureDirSync(modelDirJava);
+    fs.ensureDirSync(modelDirObjc);
+
+    //生成代码
+    new GenModel(config).launch();
+    new RestModel(config).launch();
+
     let apiDir = '';
     let copyFrom = '';
     let copyTo = '';
-
     //Java
     apiDir = config.apiDir.java;
     fs.emptyDirSync(apiDir + '/model');
@@ -32,7 +48,7 @@ function copyToMyProject() {
 
     copyFrom = outDir + '/java/REST.java';
     copyTo = apiDir + '/REST.java';
-    fs.copy(copyFrom, copyTo);
+    fs.copySync(copyFrom, copyTo);
     console.log(copyFrom + ' => ' + copyTo);
 
     //Objc
@@ -52,21 +68,6 @@ function copyToMyProject() {
     copyTo = apiDir + '/KWMAPIManager.m';
     fs.copy(copyFrom, copyTo);
     console.log(copyFrom + ' => ' + copyTo);
-}
-
-function doWork() {
-    //创建目录
-    let outDir = './code_output';
-    let modelDirJava = outDir + '/java/model';
-    let modelDirObjc = outDir + '/objc/model';
-    fs.removeSync(outDir);
-    fs.ensureDirSync(modelDirJava);
-    fs.ensureDirSync(modelDirObjc);
-    //生成代码
-    new GenModel(config).launch();
-    new RestModel(config).launch();
-
-    // copyToMyProject();
 }
 
 // 下载最新的api-docs.json文件

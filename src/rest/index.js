@@ -239,7 +239,7 @@ export class RestModel {
         let otherCode = fs.readFileSync('./src/rest/rest_java.mustache', 'utf8');
         value = mustache.render(otherCode, {
             pageSize: this.config.pageSize,
-            host: this.config.host,
+            baseUrl: this.config.baseUrl,
             port: this.config.port,
             packageName: this.config.packageName,
             refs: this.getRefList(this.config.apis, true),
@@ -252,7 +252,7 @@ export class RestModel {
 
         let otherConfig = {
             pageSize: this.config.pageSize,
-            host: this.config.host,
+            baseUrl: this.config.baseUrl,
             port: this.config.port,
             objcPrefix: this.config.objcPrefix,
             targetName: this.config.targetName,

@@ -4,16 +4,15 @@ import { Utils } from './utils'
 
 const fs = require('fs-extra');
 const config = {
-    url: 'http://kollway-kollway.oschina.io/api-doc/project/shells-api-docs.json',
-    packageName: "com.kollway.shells",
-    targetName: "iShells",
-    host: "shells.kollway.com",
+    url: 'api json',
+    packageName: "",
+    targetName: "XCode targe",
+    baseUrl: "http://192.168.0.2:8888",
     objcPrefix: "KWM",
     pageSize: 20,
-    port: 80,
     apiDir: {
-      java: '../android/app/src/main/java/com/kollway/shells/api',
-      objc: '../ios/iShells/Classes/API'
+      java: '../app/src/main/java/com/kollway/fws/api',
+      objc: '../../iFWS/iFWS/Classes/API'
     }
 };
 
@@ -39,17 +38,17 @@ function doWork() {
     let copyFrom = '';
     let copyTo = '';
     //Java
-    apiDir = config.apiDir.java;
-    fs.emptyDirSync(apiDir + '/model');
-    copyFrom = modelDirJava;
-    copyTo = apiDir + '/model';
-    fs.copySync(copyFrom, copyTo);
-    console.log(copyFrom + ' => ' + copyTo);
+     apiDir = config.apiDir.java;
+     fs.emptyDirSync(apiDir + '/model');
+     copyFrom = modelDirJava;
+     copyTo = apiDir + '/model';
+     fs.copySync(copyFrom, copyTo);
+     console.log(copyFrom + ' => ' + copyTo);
 
-    copyFrom = outDir + '/java/REST.java';
-    copyTo = apiDir + '/REST.java';
-    fs.copySync(copyFrom, copyTo);
-    console.log(copyFrom + ' => ' + copyTo);
+     copyFrom = outDir + '/java/REST.java';
+     copyTo = apiDir + '/REST.java';
+     fs.copySync(copyFrom, copyTo);
+     console.log(copyFrom + ' => ' + copyTo);
 
     //Objc
     apiDir = config.apiDir.objc;

@@ -48,11 +48,7 @@ typedef NS_ENUM(NSInteger, KWMHTTPMethod) {
 
 - (NSString *)baseUrl {
     if(! _baseUrl){
-        if (API_HOST_PORT != 80) {
-            _baseUrl = [[NSString alloc] initWithFormat:@"http://%@:%d", API_HOST, API_HOST_PORT];
-        }else{
-            _baseUrl = [[NSString alloc] initWithFormat:@"http://%@", API_HOST];
-        }
+        _baseUrl = BASE_URL;
     }
     return _baseUrl;
 }

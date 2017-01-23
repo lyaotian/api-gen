@@ -18,7 +18,7 @@ import mustache from 'mustache';
 const property = {
     name: "id",
     type: "int",
-    gencricType: null,
+    genericType: null,
     refType: null,
     isArray: false,
     doc: "描述"
@@ -26,8 +26,9 @@ const property = {
 const model = {
     doc: "User",
     name: "User",
-    refs: [],/**引用其它类 */
-    gencrics: [],/**泛型 */
+    refs: [
+        {refType: "", genericType: ""}
+    ],/**引用其它类 */
     properties: [property]
 }
 
@@ -53,7 +54,7 @@ export class GenModel {
         if (inputType == 'number'){
             return Utils.getNumberType(p.format, true);
         }else if (inputType == 'array'){
-            return 'NSArray<' + this.config.objcPrefix + p.gencricType + '> * _Nullable';
+            return 'NSArray<' + this.config.objcPrefix + p.genericType + '> * _Nullable';
         }else if (inputType == 'string'){
             return 'NSString * _Nullable';
         }else if (p.refType) {
@@ -65,7 +66,7 @@ export class GenModel {
     toJavaPropertyType(p = property){
         let inputType = p.type;
         if (inputType == 'array'){
-            return 'ArrayList<' + p.gencricType + '>';
+            return 'ArrayList<' + p.genericType + '>';
         }else if (inputType == 'number'){
             return Utils.getNumberType(p.format, false);
         }else if (inputType == 'string'){
@@ -82,6 +83,7 @@ export class GenModel {
             return {
                 doc: m.description || '',
                 name: key,
+                extends: Utils.getRefType(m.$extends),
                 properties: mKeys.map(
                     (k) => {
                         let pItem = m.properties[k];
@@ -95,7 +97,7 @@ export class GenModel {
                             name: Utils.toCamelName(k, '_'),
                             type: pItem.type || refType,
                             format: pItem.format,
-                            gencricType: isArray ? refType : null,
+                            genericType: isArray ? refType : null,
                             refType: refType,
                             isArray: isArray,
                             doc: pItem.description
@@ -114,10 +116,9 @@ export class GenModel {
             let _m = Object.assign({}, m);
             _m.packageName = this.config.packageName;
             _m.refs = [];
-            _m.gencrics = [];
             _m.properties = m.properties.map(
                 (p) => {
-                    if (p.refType || p.gencricType){
+                    if (p.refType || p.genericType){
                         if (p.refType != 'BaseModel'){
                             _m.refs.push(p.refType);
                         }
@@ -140,14 +141,17 @@ export class GenModel {
             _m.prefix = this.config.objcPrefix;
             _m.packageName = this.config.packageName;
             _m.refs = [];
-            _m.gencrics = [];
             _m.properties = _m.properties.map(
                 (p) => {
-                    if (p.refType && !p.gencricType){
-                        _m.refs.push({refType: p.refType});
+                    if (p.refType && !p.genericType){
+                        if (p.refType == m.extends) {
+                            //use #import "..."
+                        }else{
+                            _m.refs.push({refType: p.refType});//use @class
+                        }
                     }
-                    if (p.gencricType){
-                        _m.refs.push({gencricType: p.gencricType});
+                    if (p.genericType){
+                        _m.refs.push({genericType: p.genericType});
                     }
 
                     return Object.assign({}, p, {type: this.toObjcPropertyType(p)})

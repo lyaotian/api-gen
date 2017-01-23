@@ -6,22 +6,27 @@
 //  Copyright © 2016 kwm. All rights reserved.
 //
 
-#import "KWMBaseModel.h"
+@import UIKit;
+@import Foundation;
+
+{{#extends}}
+#import "{{prefix}}{{extends}}.h"
+{{/extends}}
 
 {{#refs}}
   {{#refType}}
 @class {{prefix}}{{{.}}};
   {{/refType}}
 
-  {{#gencricType}}
+  {{#genericType}}
 @protocol {{prefix}}{{{.}}};
-  {{/gencricType}}
+  {{/genericType}}
 {{/refs}}
 
 @protocol {{prefix}}{{name}} <NSObject>
 @end
 
-@interface {{prefix}}{{name}} : KWMBaseModel
+@interface {{prefix}}{{name}} : {{prefix}}{{extends}}
   {{#properties}}
 /**{{doc}}*/
 @property (nonatomic) {{{type}}} {{name}};

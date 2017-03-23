@@ -87,7 +87,7 @@ const itemObjcM = `
                           failure:failure];
 }
 {{/apis}}
-`;
+`
 
 const itemJava = `
   {{#apis}}
@@ -107,7 +107,28 @@ const itemJava = `
             {{/parameters}}
     );
   {{/apis}}
-`;
+`
+
+const itemTs = `
+export function userApiLogin(
+    parameters: {
+        phone: string,
+        password: string,
+    },
+    success: (result: RequestResult<User>) => void,
+    failure: (error: RequestError) => void
+) {
+    request<User>(
+        '/UserApi/login',
+        {
+            phone: 13800138001,
+            password: 1234,
+        },
+        success,
+        failure
+    )
+}
+`
 
 /**生成REST API代码 */
 export class RestModel {
@@ -189,6 +210,7 @@ export class RestModel {
         }
         return Array.from(new Set(allRef));
     }
+    
     genJavaCode(dir){
         let getParameterMethod = (api) => {
             if (api.method == 'POST'){
@@ -270,8 +292,9 @@ export class RestModel {
     }
 
     launch(){
-        this.genJavaCode('code_output/java');
-        this.genObjcCode('code_output/objc');
+        // this.genJavaCode('code_output/java');
+        // this.genObjcCode('code_output/objc');
+        this.genTsCode('code_output/ts');
 
         console.log('REST API code were generated to dir \'./code_output\' successfully!!');
     }

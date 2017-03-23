@@ -2,17 +2,17 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "球之道",
-    "description": "描述",
+    "title": "中消物联",
+    "description": "中消物联项目API文档",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
-      "name": "Yaotian"
+      "name": "WGL"
     },
     "license": {
       "name": "MIT"
     }
   },
-  "host": "petstore.swagger.io",
+  "host": "zxwl.swagger.io",
   "basePath": "/api",
   "tags": [
     {
@@ -20,20 +20,20 @@
       "description": "用户相关"
     },
     {
-      "name": "Team",
-      "description": "球队相关"
+      "name": "Debug",
+      "description": "调试相关"
     },
     {
-      "name": "Balldate",
-      "description": "约球相关"
+      "name": "Device",
+      "description": "设备相关"
     },
     {
-      "name": "Match",
-      "description": "联赛相关"
+      "name": "Event",
+      "description": "事件相关"
     },
     {
-      "name": "Push",
-      "description": "推送相关"
+      "name": "Update",
+      "description": "更新相关"
     }
   ],
   "schemes": [
@@ -51,7 +51,7 @@
         "tags": [
           "User"
         ],
-        "summary": "获取注册验证短信[完成]",
+        "summary": "获取注册验证短信",
         "parameters": [
           {
             "name": "phone",
@@ -63,7 +63,7 @@
           {
             "name": "token",
             "in": "query",
-            "description": "md5(ballsoul+phone)",
+            "description": "md5(tanda+phone)",
             "required": true,
             "type": "string"
           }
@@ -72,7 +72,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/BaseModel"
+              "$ref": "#/definitions/RspModel"
             }
           }
         }
@@ -83,7 +83,7 @@
         "tags": [
           "User"
         ],
-        "summary": "注册[完成]",
+        "summary": "注册",
         "parameters": [
           {
             "name": "phone",
@@ -105,20 +105,6 @@
             "description": "密码",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "nickname",
-            "in": "query",
-            "description": "昵称",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "invite_code",
-            "in": "query",
-            "description": "邀请码",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
@@ -136,7 +122,7 @@
         "tags": [
           "User"
         ],
-        "summary": "登录[完成]",
+        "summary": "登录",
         "parameters": [
           {
             "name": "phone",
@@ -163,59 +149,12 @@
         }
       }
     },
-    "/UserApi/thirdLogin": {
+    "/UserApi/resetAccount": {
       "post": {
         "tags": [
           "User"
         ],
-        "summary": "第三方登录[完成]",
-        "parameters": [
-          {
-            "name": "openid",
-            "in": "query",
-            "description": "第三方用户唯一标识",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "nickname",
-            "in": "query",
-            "description": "昵称",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "1-微信 2-QQ",
-            "required": true,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "avatar",
-            "in": "query",
-            "description": "头像",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/resetPasswordSms": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "获取重设密码验证短信[完成]",
+        "summary": "修改账号",
         "parameters": [
           {
             "name": "phone",
@@ -225,48 +164,30 @@
             "type": "string"
           },
           {
-            "name": "token",
+            "name": "password",
             "in": "query",
-            "description": "md5(ballsoul+phone)",
+            "description": "密码",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/resetPassword": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "重设密码[完成]",
-        "parameters": [
+          },
           {
-            "name": "phone",
+            "name": "new_phone",
             "in": "query",
-            "description": "手机号",
+            "description": "新手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "new_password",
+            "in": "query",
+            "description": "新密码",
             "required": true,
             "type": "string"
           },
           {
             "name": "sms_verify",
             "in": "query",
-            "description": "短信验证码",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "密码",
+            "description": "新手机验证码",
             "required": true,
             "type": "string"
           }
@@ -275,3212 +196,737 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/BaseModel"
+              "$ref": "#/definitions/RspModel"
             }
           }
         }
       }
     },
-    "/UserApi/updateInfo": {
-      "post": {
+    "/DeviceApi/otherDevices": {
+      "get": {
         "tags": [
-          "User"
+          "Device"
         ],
-        "summary": "修改用户信息[完成]",
+        "summary": "他人的设备列表",
         "parameters": [
-          {
-            "name": "nickname",
-            "in": "query",
-            "description": "昵称",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "avatar",
-            "in": "formData",
-            "description": "头像",
-            "required": true,
-            "type": "file"
-          },
-          {
-            "name": "sex",
-            "in": "query",
-            "description": "性别(0-男 1-女)",
-            "required": false,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "height",
-            "in": "query",
-            "description": "身高",
-            "required": false,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "weight",
-            "in": "query",
-            "description": "体重",
-            "required": false,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "birthday",
-            "in": "query",
-            "description": "出生年月",
-            "required": false,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "ball_age",
-            "in": "query",
-            "description": "球龄",
-            "required": false,
-            "type": "number",
-            "format":"int"
-          },
-          {
-            "name": "regular_gym",
-            "in": "query",
-            "description": "常去球馆",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "signature",
-            "in": "query",
-            "description": "签名",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/userTeams": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "用户的球队[完成]",
-        "parameters": [
-          {
-            "name": "user_id",
-            "description": "用户id",
-            "in": "query",
-            "required": true,
-            "type":"number",
-            "format":"int"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Team"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/listRequestFriends":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"好友请求列表[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/searchFriends":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"搜索好友[完成]",
-        "parameters": [
-          {
-            "name": "keyword",
-            "description": "搜索关键字",
-            "in": "query",
-            "required": true,
-            "type":"string"
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/addFriend":{
-      "post":{
-        "tags":[
-          "User"
-        ],
-        "summary":"添加好友[完成]",
-        "parameters":[
-          {
-            "name":"user_id",
-            "description":"好友ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/validFriend":{
-      "post":{
-        "tags":[
-          "User"
-        ],
-        "summary":"验证好友请求[完成]",
-        "parameters":[
-          {
-            "name":"request_id",
-            "description":"请求ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"state",
-            "description":"申请状态(0-申请,1-通过,2-拒绝)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/deleteFriend":{
-      "post":{
-        "tags":[
-          "User"
-        ],
-        "summary":"删除好友[完成]",
-        "parameters":[
-          {
-            "name":"user_id",
-            "description":"好友ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/listFriends":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"好友列表[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/listGroups":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"群组列表[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Team"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/userInfo":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"用户详细信息[完成]",
-        "parameters":[
-          {
-            "name":"user_id",
-            "description":"用户ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/refresh":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"刷新用户信息[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/userDatabase":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"个人数据库[完成]",
-        "parameters":[
-          {
-            "name":"user_id",
-            "description":"用户ID(查看自己可传0)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/myMatches":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"我参加过的联赛[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Match"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/myJoinedGames":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"我参加过的比赛(约球)[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Balldate"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/myBalldates":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"我发起过的约球[完成]",
-        "parameters": [],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Balldate"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/listPhoneContacts":{
-      "get":{
-        "tags":[
-          "User"
-        ],
-        "summary":"手机联系人列表[完成]",
-        "parameters":[
-          {
-            "name":"phone_arrays",
-            "description":"手机号码字符串（xxx,xxx,xxxx）",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/UserApi/invitePhoneUser":{
-      "post":{
-        "tags":[
-          "User"
-        ],
-        "summary":"邀请非球之道用户注册球之道[完成]",
-        "parameters":[
-          {
-            "name":"phone",
-            "description":"被邀请用户手机号码",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses":{
-          "200":{
-            "description":"",
-            "schema": {
-              "$ref":"#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/listTeams": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队列表[完成]",
-        "parameters":[
-          {
-            "name": "keyword",
-            "description": "搜索关键字",
-            "type": "string",
-            "in": "query",
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Team"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/teamDetail": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队详情[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Team"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/createTeam": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "创建球队[完成]",
-        "parameters":[
-          {
-            "name":"avatar",
-            "description":"球队头像",
-            "type":"file",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"name",
-            "description":"球队名称",
-            "type":"string",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"slogan",
-            "description":"球队口号",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Team"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/applyTeam": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "申请加入球队[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"number",
-            "description":"球衣号码",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/dropTeam": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "退出球队[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/handleApply": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队管理员同意或拒绝用户申请[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"user_id",
-            "description":"用户ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"type",
-            "description":"申请或拒绝(0.同意，1.拒绝)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/confirmJoinTeam": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球员受到邀请加入球队的推送后确定加入球队[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"number",
-            "description":"球衣号码",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/listTeamUsers": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队球员列表[完成]",
-        "parameters":[
-          {
-            "name": "team_id",
-            "description": "球队id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "is_adopted",
-            "description": "是否选择已经通过了申请的球员（0.否，1.是）",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/managerPlayer": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队管理员管理球员[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"user_id",
-            "description":"用户ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"is_manger",
-            "description":"是否是管理员(0.否，1.是)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"role",
-            "description":"球队角色(0.前锋，1.中锋，2.后卫)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/listTeamBalldates": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队参加的约球列表[完成]",
-        "parameters":[
-          {
-            "name": "team_id",
-            "description": "球队id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Balldate"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/listTeamMatches": {
-      "get": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队参加的联赛列表[完成]",
-        "parameters":[
-          {
-            "name": "team_id",
-            "description": "球队id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Match"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/deletePlayer": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队管理员删除球员[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"user_id",
-            "description":"用户ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/invitePlayer": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "邀请新球员加入[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"user_id",
-            "description":"用户ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-
-    "TeamApi/listInvitedFriends":{
-      "get":{
-        "tags": [
-          "Team"
-        ],
-        "summary": "邀请参加球队时的好友列表[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-
-
-    "TeamApi/listWonderful":{
-      "get":{
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队精彩瞬间列表[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/TeamWonderful"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/TeamApi/publishWonderful": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "发布精彩瞬间[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"content",
-            "description":"",
-            "type":"string",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name": "images",
-            "description": "一个或多个图片",
-            "type": "string",
-            "in": "query",
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/TeamWonderful"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/deleteWonderful": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "删除球队精彩瞬间[完成]",
-        "parameters":[
-          {
-            "name":"wonderful_id",
-            "description":"精彩瞬间ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "TeamApi/listTimelines":{
-      "get":{
-        "tags": [
-          "Team"
-        ],
-        "summary": "球队时间轴[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Timeline"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/TeamApi/publishTimeline": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "发布球队时间轴[完成]",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"content",
-            "description":"",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Timeline"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/editTimeline": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "编辑时间轴[完成]",
-        "parameters":[
-          {
-            "name":"timeline_id",
-            "description":"时光轴ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"content",
-            "description":"",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Timeline"
-            }
-          }
-        }
-      }
-    },
-    "/TeamApi/deleteTimeline": {
-      "post": {
-        "tags": [
-          "Team"
-        ],
-        "summary": "删除球队时间轴",
-        "parameters":[
-          {
-            "name":"team_id",
-            "description":"球队id",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"timeline_ids",
-            "description":"字符串时间轴集合（1,2,3,4）",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/listAdvertise": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "首页广告列表[完成]",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Advertise"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/listMatches": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛列表[完成]",
-        "parameters":[
-          {
-            "name": "page",
-            "description": "页数",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "city_id",
-            "description": "城市id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Match"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/listCity": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "获取开通城市列表[完成]",
-        "parameters":[
-          {
-            "name": "page",
-            "description": "页数",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/City"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/matchDetail": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛章程[完成]",
-        "parameters":[
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Match"
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/applyMatch": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "申请参加联赛",
-        "parameters":[
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "team_id",
-            "description": "球队id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "user_ids",
-            "description": "球员id集合字符串（1,2,3）",
-            "type":"string",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/listSchedules": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛赛程列表[完成]",
-        "parameters":[
-          {
-            "name": "page",
-            "description": "页数",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/MatchSchedule"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/scheduleDetail": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "获取赛程详情(裁判验证通过后首次进入获取最新同步的数据)[完成]",
-        "parameters":[
-          {
-            "name": "match_schedule_id",
-            "description": "联赛赛程id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/MatchSchedule"
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/listTeamRanks": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛球队排行榜[完成]",
-        "parameters":[
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/TeamRanking"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/listUserRanks": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛球员排行榜[完成]",
-        "parameters":[
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "type",
-            "description": "统计类型（1.得分，2.篮板，3.助攻，4.抢断，5.盖帽）",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/UserRanking"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/confirmJoin": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "球员确认参加比赛[完成]",
-        "parameters":[
-          {
-            "name": "match_id",
-            "description": "联赛id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "team_id",
-            "description": "球队id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "real_name",
-            "in": "query",
-            "description": "真实姓名",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "id_number",
-            "in": "query",
-            "description": "身份证号码",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "stu_number",
-            "in": "query",
-            "description": "学生证号码",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "other_number",
-            "in": "query",
-            "description": "其它证件号码",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "id_photo_front",
-            "in": "formData",
-            "description": "身份证正面",
-            "required": false,
-            "type": "file"
-          },
-          {
-            "name": "id_photo_back",
-            "in": "formData",
-            "description": "身份证背面",
-            "required": false,
-            "type": "file"
-          },
-          {
-            "name": "stu_photo_front",
-            "in": "formData",
-            "description": "学生证正面",
-            "required": false,
-            "type": "file"
-          },
-          {
-            "name": "stu_photo_back",
-            "in": "formData",
-            "description": "学生证背面",
-            "required": false,
-            "type": "file"
-          },
-          {
-            "name": "other_photo_front",
-            "in": "formData",
-            "description": "其它证件正面",
-            "required": false,
-            "type": "file"
-          },
-          {
-            "name": "other_photo_back",
-            "in": "formData",
-            "description": "其它证件背面",
-            "required": false,
-            "type": "file"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/User"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/refreeLogin": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "裁判登录(进入联赛操作界面时的登录)[完成]",
-        "parameters":[
-          {
-            "name": "match_schedule_id",
-            "description": "联赛赛程id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
           {
             "name": "phone",
             "in": "query",
-            "description": "裁判手机号码",
-            "type":"string",
-            "required": true
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "裁判密码",
+            "description": "手机号",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/RefreeAuthToken"
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/syncData": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "提交联赛数据同步[完成]",
-        "parameters":[
-          {
-            "name": "match_schedule_id",
-            "description": "联赛赛程id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "auth_token",
-            "in": "query",
-            "description": "裁判操作令牌",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "all_data_json",
-            "in": "query",
-            "description": "所有数据的json字符串, 示例: http://ballsoul.kollway.com/json/request/syncData.all_data_json.json",
-            "type":"string",
-            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/BaseModel"
+              "$ref": "#/definitions/Device"
             }
           }
         }
       }
     },
-    "/MatchApi/getSyncData": {
+    "/DeviceApi/myDevices": {
       "get": {
         "tags": [
-          "Match"
+          "Device"
         ],
-        "summary": "获取最新同步的联赛数据(已废弃,请使用/MatchApi/scheduleDetail)",
-        "parameters":[
+        "summary": "我的设备列表",
+        "parameters": [
           {
-            "name": "match_schedule_id",
-            "description": "联赛赛程id",
-            "type":"number",
-            "format":"int",
+            "name": "phone",
             "in": "query",
-            "required": true
-          },
-          {
-            "name": "auth_token",
-            "in": "query",
-            "description": "裁判操作令牌",
+            "description": "手机号",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema":{
-              "$ref":"#/definitions/MatchSyncData"
-            },
-            "description": ""
-          }
-        }
-      }
-    },
-    "/MatchApi/terminate": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "结束比赛[完成]",
-        "parameters":[
-          {
-            "name": "match_schedule_id",
-            "description": "联赛赛程id",
-            "type":"number",
-            "format":"int",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name": "auth_token",
-            "in": "query",
-            "description": "裁判操作令牌",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name":"mvp_ids",
-            "in":"query",
-            "description":"MVP的ID集合字符串(5,32,8)"
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/BaseModel"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Device"
+              }
             }
           }
         }
       }
     },
-
-
-    "/BalldateApi/listBalldates": {
+    "/DeviceApi/shareDevice": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "分享设备",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "target_phone",
+            "in": "query",
+            "description": "被分享人的手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/listShare": {
       "get": {
         "tags": [
-          "Balldate"
+          "Device"
         ],
-        "summary": "约球列表[完成]",
-        "parameters":[
+        "summary": "分享列表",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/removeShare": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "移除分享",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "target_phone",
+            "in": "query",
+            "description": "被分享人的手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/muteDevice": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "消音设备",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "devices",
+            "in": "query",
+            "description": "设备名逗号分隔的字符串(如:device1,device2,device3)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/resetDevice": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "复位设备",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "devices",
+            "in": "query",
+            "description": "设备名逗号分隔的字符串(如:device1,device2,device3)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/urgencyContact": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "紧急联系人",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Urgency"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/updateFireInfo": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "更新消防电话",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fire_phone",
+            "in": "query",
+            "description": "火警电话",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "manager_phone",
+            "in": "query",
+            "description": "物业电话",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DebugApi/listDebugAccount": {
+      "get": {
+        "tags": [
+          "Debug"
+        ],
+        "summary": "调试账号列表",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/DebugApi/login": {
+      "post": {
+        "tags": [
+          "Debug"
+        ],
+        "summary": "登录调试",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/DebugApi/listProject": {
+      "get": {
+        "tags": [
+          "Debug"
+        ],
+        "summary": "工程列表",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Project"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/DebugApi/addProject": {
+      "post": {
+        "tags": [
+          "Debug"
+        ],
+        "summary": "新增工程",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "工程名称",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        }
+      }
+    },
+    "/DebugApi/postDebug": {
+      "post": {
+        "tags": [
+          "Debug"
+        ],
+        "summary": "提交调试信息",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "devices",
+            "in": "query",
+            "description": "设备名逗号分隔的字符串(如:device1,device2,device3)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "area",
+            "in": "query",
+            "description": "区域（省/市/区）",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "详细地址",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "in": "query",
+            "description": "工程名称",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/RspModel"
+            }
+          }
+        }
+      }
+    },
+    "/DeviceApi/hostInfo": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "获取主机信息",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/HostInfo"
+            }
+          }
+        }
+      }
+    },
+    "/EventApi/listEvent": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "summary": "事件列表",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "事件类型(0-报警 1-异常 2-操作)",
+            "required": true,
+            "type": "number",
+            "format": "int32"
+          },
           {
             "name": "page",
-            "description": "页数",
-            "type":"number",
-            "format":"int",
             "in": "query",
-            "required": true
-          },
-          {
-            "name": "condition",
-            "description": "筛选条件(0.最新约球，1.附近约球)",
-            "type": "string",
-            "in": "query",
-            "required": true
-          },
-          {
-            "name":"lat",
-            "description":"纬度",
-            "type":"number",
-            "format":"double",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"lng",
-            "description":"经度",
-            "type":"number",
-            "format":"double",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Balldate"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/BalldateApi/publishBalldate": {
-      "post": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "发布约球[完成]",
-        "parameters":[
-          {
-            "name":"name",
-            "description":"名称",
-            "type":"string",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"start_time",
-            "description":"约战时间",
-            "type":"string",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"team_id",
-            "description":"球队id",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"place",
-            "description":"比赛场地",
-            "type":"string",
-            "in":"query",
-            "required":false
-          },
-          {
-            "name":"lat",
-            "description":"纬度",
-            "type":"number",
-            "format":"double",
-            "in":"query",
-            "required":false
-          },
-          {
-            "name":"lng",
-            "description":"经度",
-            "type":"number",
-            "format":"double",
-            "in":"query",
-            "required":false
-          },
-          {
-            "name":"mode",
-            "description":"比赛模式(0.3V3，1.4V4，2.5V5)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"pay_type",
-            "description":"付款方式(0.免费，1.AA，2.败家付，3.我请客)",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Team"
-            }
-          }
-        }
-      }
-    },
-    "/BalldateApi/balldateDetail": {
-      "get": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "约球详情[完成]",
-        "parameters":[
-          {
-            "name":"balldate_id",
-            "description":"约球ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Balldate"
-            }
-          }
-        }
-      }
-    },
-    "/BalldateApi/applyBalldate": {
-      "post": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "应战方应战约球[完成]",
-        "parameters":[
-          {
-            "name":"balldate_id",
-            "description":"约球ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"team_id",
-            "description":"应战球队ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
+            "description": "page",
+            "required": true,
+            "type": "number",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/BalldateApi/chooseApply": {
-      "post": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "约战方选中应战球队[完成]",
-        "parameters":[
-          {
-            "name":"balldate_id",
-            "description":"约球ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"team_id",
-            "description":"应战球队id",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-    "/BalldateApi/recordPoint": {
-      "post": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "录入比分[完成]",
-        "parameters":[
-          {
-            "name":"balldate_id",
-            "description":"约球ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"type",
-            "description":"1.约球方,2.应战方",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"date_point",
-            "description":"约球方比分",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"apply_point",
-            "description":"应战方比分",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-
-    "/BalldateApi/cancelBalldate": {
-      "post": {
-        "tags": [
-          "Balldate"
-        ],
-        "summary": "约球方或应战方取消约球[完成]",
-        "parameters":[
-          {
-            "name":"balldate_id",
-            "description":"约球ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/BaseModel"
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/listMatchDynamics": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛动态列表[完成]",
-        "parameters":[
-          {
-            "name":"match_id",
-            "description":"联赛ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Dynamic"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/dynamicMessages": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛动态留言列表[完成]",
-        "parameters":[
-          {
-            "name":"dynamic_id",
-            "description":"动态ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/DynamicMessage"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MatchApi/apiDynamicDetail": {
-      "get": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "联赛动态详情[完成]",
-        "parameters":[
-          {
-            "name":"dynamic_id",
-            "description":"动态ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/Dynamic"
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/sendMessage": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "发表联赛动态的留言[完成]",
-        "parameters":[
-          {
-            "name":"dynamic_id",
-            "description":"动态ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"content",
-            "description":"留言类容",
-            "type":"string",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/DynamicMessage"
-            }
-          }
-        }
-      }
-    },
-
-    "/MatchApi/likeDynamic": {
-      "post": {
-        "tags": [
-          "Match"
-        ],
-        "summary": "点赞或取消赞动态[完成]",
-        "parameters":[
-          {
-            "name":"dynamic_id",
-            "description":"动态ID",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          },
-          {
-            "name":"type",
-            "description":"0.取消赞，1.点赞",
-            "type":"number",
-            "format":"int",
-            "in":"query",
-            "required":true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "$ref":"#/definitions/DynamicMessage"
-            }
-          }
-        }
-      }
-    },
-
-
-    "/PushApi/listPushes": {
-      "get": {
-        "tags": [
-          "Push"
-        ],
-        "summary": "我的推送消息列表[完成]",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema":{
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Push"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
               }
             }
           }
         }
       }
     }
-
   },
   "definitions": {
     "User": {
       "description": "用户",
       "required": [
-        "id"
+        "phone"
       ],
       "properties": {
         "phone": {
           "type": "string",
           "description": "手机号"
         },
-        "nickname": {
+        "name": {
           "type": "string",
-          "description": "用户昵称"
-        },
-        "capital":{
-          "type":"string",
-          "description":"昵称首字母"
-        },
-        "avatar": {
-          "type": "string",
-          "description": "用户头像"
-        },
-        "sex": {
-          "type": "number",
-          "format": "int",
-          "description": "性别(0-女 1-男)"
-        },
-        "birthday": {
-          "type": "number",
-          "format": "int",
-          "description": "出生年月"
-        },
-        "ball_age": {
-          "type": "number",
-          "format":"int",
-          "description": "球龄"
-        },
-        "height": {
-          "type": "number",
-          "format":"int",
-          "description": "身高"
-        },
-        "weight": {
-          "type": "number",
-          "format":"int",
-          "description": "体重"
-        },
-        "regular_gym": {
-          "type": "string",
-          "description": "常去球馆"
-        },
-        "signature": {
-          "type": "string",
-          "description": "签名"
-        },
-        "age": {
-          "type": "number",
-          "format":"int",
-          "description": "年龄"
-        },
-        "rong_cloud_token":{
-          "type":"string",
-          "description":"融云token"
-        },
-        "rong_user_id":{
-          "type":"string",
-          "description":"融云用户id"
-        },
-        "real_name": {
-          "type": "string",
-          "description": "真实姓名"
-        },
-        "id_number":{
-          "type":"string",
-          "description":"身份证号"
-        },
-        "own_photo": {
-          "type": "string",
-          "description": "个人照片（免冠）"
-        },
-        "verify_state":{
-          "type":"number",
-          "format":"int",
-          "description":"是否已通过身份验证（0.未认证，1.申请中，2.已认证）"
-        },
-        "thumb_avatar": {
-          "type": "string",
-          "description": "头像缩略图"
-        },
-        "has_team":{
-          "type":"number",
-          "format":"int",
-          "description":"是否有加入球队(0-否 1-是)"
-        },
-        "friend_state":{
-          "type":"number",
-          "format":"int",
-          "description":"好友关系(-3-非注册用户，未邀请,-2-非注册用户，已邀请，-1-非好友 0-正在申请 1-通过 2-拒绝 3-我加别人为好友 4-别人加我为好友)"
-        },
-        "request_id":{
-          "type":"number",
-          "format":"int",
-          "description":" 好友请求id"
-        },
-        "is_team_manager":{
-          "type":"number",
-          "format":"int",
-          "description":"是否是球队管理员(0.否，1.是)"
-        },
-        "team_role":{
-          "type":"number",
-          "format":"int",
-          "description":"球队角色(0.前锋，1.中锋，2.后卫)"
-        },
-        "apply_team_state":{
-          "type":"number",
-          "format":"int",
-          "description":"申请加入球队状态(0.未申请,1.申请中，2.已通过)"
-        },
-        "invite_code":{
-          "type":"string",
-          "description":"邀请码"
-        },
-        "total_pointer":{
-          "type":"number",
-          "format":"int",
-          "description":"总得分"
-        },
-        "total_rebound":{
-          "type":"number",
-          "format":"int",
-          "description":"总篮板"
-        },
-        "total_assistant":{
-          "type":"number",
-          "format":"int",
-          "description":"总助攻"
-        },
-        "qrcode_img":{
-          "type": "string",
-          "description": "二维码图片"
-        },
-        "mark_type":{
-          "type":"number",
-          "format":"int",
-          "description":"标记类型（0.教练，1.专业，2.非专业，3.学员）"
-        },
-        "is_invited":{
-          "type":"number",
-          "format":"int",
-          "description":"是否被邀请加入某个球队（0.否，1.是）"
-        },
-        "manager_team_ids":{
-          "type": "string",
-          "description": "当前登录用户是球队管理员的球队的id值的字符串集合"
-        },
-        "user_teams":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Team"
-          },
-          "description": "用户加入的球队"
-        },
-        "user_balldates":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Balldate"
-          },
-          "description": "用户发起的约球"
-        },
-        "user_games":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Balldate"
-          },
-          "description": "用户参加的比赛（约球）"
-        },
-        "user_matches":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Match"
-          },
-          "description": "用户参加的联赛"
+          "description": "用户名称"
         }
       }
     },
-    "Team":{
-      "description":"球队",
+    "Device": {
+      "description": "设备",
       "required": [
         "id"
       ],
-      "properties":{
-        "name":{
-          "type":"string",
-          "description":"球队名称"
-        },
-        "avatar":{
-          "type":"string",
-          "description":"头像"
-        },
-        "slogan":{
-          "type":"string",
-          "description":"球队口号"
-        },
-        "win_rate": {
-          "type": "number",
-          "format":"int",
-          "description": "胜率"
-        },
-        "avg_height":{
-          "type": "number",
-          "format":"int",
-          "description": "平均身高"
-        },
-        "avg_age":{
-          "type": "number",
-          "format":"int",
-          "description": "平均年龄"
-        },
-        "count":{
-          "type": "number",
-          "format":"int",
-          "description": "球队人数"
-        },
-        "apply_state":{
-          "type": "number",
-          "format":"int",
-          "description": "申请状态(0.未申请,1.申请中，2.已通过)"
-        },
-        "thumb_avatar": {
-          "type": "string",
-          "description": "头像缩略图"
-        },
-        "rong_group_id":{
-          "type":"string",
-          "description":"融云群组id"
-        },
-        "match_count":{
-          "type": "number",
-          "format":"int",
-          "description": "参加联赛次数"
-        },
-        "balldate_count":{
-          "type": "number",
-          "format":"int",
-          "description": "约球次数"
-        },
-        "apply_count":{
-          "type": "number",
-          "format":"int",
-          "description": "应战次数"
-        },
-        "users":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/User"
-          },
-          "description": "球队的球员"
-        },
-        "balldates":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Balldate"
-          },
-          "description": "球队参加的约球"
-        },
-        "matches":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Match"
-          },
-          "description": "球队参加的联赛"
-        }
-      }
-    },
-    "Balldate":{
-      "description":"约球",
-      "required": [
-        "id"
-      ],
-      "properties":{
-        "create_user":{
-          "$ref":"#/definitions/User",
-          "description":"约球创建者"
-        },
-        "create_Team":{
-          "$ref":"#/definitions/Team",
-          "description":"约战球队"
-        },
-        "first_apply_Team":{
-          "$ref":"#/definitions/Team",
-          "description":"第一个应战的球队"
-        },
-        "name":{
-          "type":"string",
-          "description":"约球名称"
-        },
-        "start_day":{
-          "type": "number",
-          "format":"int",
-          "description":"约战日期"
-        },
-        "start_time":{
-          "type":"string",
-          "description":"约战时间"
-        },
-        "place":{
-          "type":"string",
-          "description":"比赛场地"
-        },
-        "mode":{
-          "type":"number",
-          "format":"int",
-          "description":"比赛模式(0.3V3,1.4V4,2.5V5)"
-        },
-        "pay_type":{
-          "type":"number",
-          "format":"int",
-          "description":"付款方式(0.免费，1.AA，2.败家付，3.我请客)"
-        },
-        "state":{
-          "type":"number",
-          "format":"int",
-          "description":"约球状态(0.未应战，1.已应战，2.已结束)"
-        },
-        "user_apply_state":{
-          "type":"number",
-          "format":"int",
-          "description":"当前登陆用户的应战状态(0-未应战,1-已应战,2-取消,3-录入比分,4-已录入比分,5-已结束)"
-        },
-        "lat": {
-          "type": "number",
-          "description": "纬度",
-          "format":"float"
-        },
-        "lng": {
-          "type": "number",
-          "description": "经度",
-          "format":"float"
-        },
-        "apply_Teams":{
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Team"
-          },
-          "description": "应战的球队"
-        }
-      }
-    },
-    "Match":{
-      "description":"联赛",
-      "required": [
-        "id"
-      ],
-      "properties":{
-        "name":{
-          "type":"string",
-          "description":"赛事名称"
-        },
-        "cover_img":{
-          "type":"string",
-          "description":"封面图"
-        },
-        "start_time":{
-          "type":"string",
-          "description":"开始时间"
-        },
-        "end_time":{
-          "type":"string",
-          "description":"结束时间"
-        },
-        "sponsor":{
-          "type":"string",
-          "description":"主办方"
-        },
-        "place":{
-          "type":"string",
-          "description":"比赛地点"
-        },
-        "prize":{
-          "type":"string",
-          "description":"比赛奖金"
-        },
-        "introduction":{
-          "type":"string",
-          "description":"比赛介绍"
-        },
-        "mark_type":{
-          "type":"number",
-          "format":"int",
-          "description":"标记类型（0.政府组织，1.企事业，2.球之道）"
-        },
-        "mode":{
-          "type":"number",
-          "format":"int",
-          "description":"比赛模式(0.5V5,1.4V4,2.3V3)"
-        },
-        "state":{
-          "type":"number",
-          "format":"int",
-          "description":"联赛进行状态(0.报名中,1.进行中,2.已结束)"
-        },
-        "enroll_state":{
-          "type":"number",
-          "format":"int",
-          "description":"所在球队报名状态（0.未报名，1.已报名，2.已通过)"
-        },
-        "rest_day":{
-          "type":"number",
-          "format":"int",
-          "description":"截止报名天数"
-        },
-        "team_count":{
-          "type":"number",
-          "format":"int",
-          "description":"参与队伍个数"
-        },
-        "is_open_mvp":{
-          "type":"number",
-          "format":"int",
-          "description":"是否开启mvp(0.否,1.是)"
-        },
-        "match_papers":{
-          "description": "联赛的证件列表",
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/MatchPaper"
-          }
-
-        }
-      }
-    },
-    "MatchSchedule":{
-      "description": "联赛赛程",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "first_team":{
-          "$ref":"#/definitions/Team",
-          "description":"第一个球队"
-        },
-        "second_team":{
-          "$ref":"#/definitions/Team",
-          "description":"第二个球队"
-        },
-        "first_team_point": {
-          "type": "number",
-          "format":"int",
-          "description": "第一个球队得分"
-        },
-         "second_team_point": {
-          "type": "number",
-          "format":"int",
-          "description": "第二个球队得分"
-        },
-        "start_day":{
-          "type": "number",
-          "format":"int",
-          "description":"比赛日期"
-        },
-        "start_time":{
-          "type":"string",
-          "description":"比赛时间"
-        },
-        "place":{
-          "type":"string",
-          "description":"比赛地点"
-        },
-        "state":{
-          "type": "number",
-          "format":"int",
-          "description": "比赛状态(0.未开始，1.进行中，2.已结束)"
-        },
-        "refree_user": {
-          "$ref":"#/definitions/User",
-          "description": "裁判信息"
-        },
-        "match_rule": {
-          "$ref":"#/definitions/MatchRule",
-          "description": "比赛规则"
-        },
-        "sync_data": {
-          "$ref":"#/definitions/MatchSyncData",
-          "description": "比赛最新同步的数据"
-        }
-      }
-    },
-
-    "MatchPaper":{
-      "description": "城市",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "match_id":{
-          "type":"number",
-          "format":"int",
-          "description":"名称"
-        },
-        "type":{
-          "type":"number",
-          "format":"int",
-          "description":"证件类型（1.身份证，2.学生证，3.其他证件）"
-        },
-        "paper_name":{
-          "type":"string",
-          "description":"证件名称"
-        },
-        "is_submit_number":{
-          "type":"number",
-          "format":"int",
-          "description":"是否上传证件号码（0.否，1.是)"
-        },
-        "is_submit_photo":{
-          "type":"number",
-          "format":"int",
-          "description":"是否上传证件照片（0.否，1.是)"
-        }
-      }
-    },
-
-    "City":{
-      "description": "城市",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "name":{
-          "type":"string",
-          "description":"名称"
-        },
-        "capital":{
-          "type":"string",
-          "description":"名称首字母"
-        }
-      }
-    },
-    "Advertise": {
-      "description": "广告",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "title": {
-          "type": "string",
-          "description": "广告标题"
-        },
-        "image": {
-          "type": "string",
-          "description": "图片"
-        },
-        "detail": {
-          "type": "string",
-          "description": "广告详情"
-        }
-      }
-    },
-    "Ranking":{
-      "description":"联赛排行榜",
-      "properties":{
-        "match_team":{
-          "$ref":"#/definitions/Team",
-          "description":"参赛球队"
-        },
-        "point":{
-          "type":"number",
-          "format": "int",
-          "description":"积分"
-        },
-        "wins":{
-          "type":"number",
-          "format": "int",
-          "description":"胜场"
-        },
-        "losses":{
-          "type":"number",
-          "format": "int",
-          "description":"负场"
-        }
-      }
-    },
-    "TeamRanking":{
-      "description":"球队排行榜",
-      "properties":{
-        "team":{
-          "$ref":"#/definitions/Team",
-          "description":"参赛球队"
-        },
-        "win_rate":{
-          "type":"number",
-          "format": "float",
-          "description":"胜率"
-        },
-        "wins":{
-          "type":"number",
-          "format": "int",
-          "description":"胜场"
-        },
-        "losses":{
-          "type":"number",
-          "format": "int",
-          "description":"负场"
-        },
-        "winning_count":{
-          "type":"number",
-          "format": "int",
-          "description":"连胜场数"
-        }
-      }
-    },
-    "UserRanking":{
-      "description":"球员排行榜",
-      "properties":{
-        "user":{
-          "$ref":"#/definitions/User",
-          "description":"参赛球员"
-        },
-        "team_name":{
-          "type":"string",
-          "description":"队名"
-        },
-        "average_point":{
-          "type":"number",
-          "format": "float",
-          "description":"场均成绩"
-        }
-      }
-    },
-    "Image": {
-      "description": "图片",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "path": {
-          "type": "string",
-          "description": "图片路径"
-        }
-      }
-    },
-    "Push": {
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "title": {
-          "type": "string",
-          "description": "标题"
-        },
-        "summary": {
-          "type": "string",
-          "description": "概述"
-        },
-        "content": {
-          "type": "string",
-          "description": "系统推送内容"
-        },
-        "push_type": {
-          "type": "number",
-          "format": "int",
-          "description": "推送的类型（0.其他类型的推送，1.好友请求过来的推送(is_friend_request)，2.申请加入自己球队的推送（is_apply_team））"
-        }
-      }
-    },
-    "RefreeAuthToken": {
-      "required": [
-        "token"
-      ],
-      "properties": {
-        "token": {
-          "type": "string",
-          "description": "裁判操作联赛令牌"
-        }
-      }
-    },
-    "MatchSyncData": {
-      "properties": {
-        "match_schedule_id": {
-          "type": "number",
-          "format": "int",
-          "description": "联赛赛程id"
-        },
-        "refree_user_id": {
-          "type": "number",
-          "format": "int",
-          "description": "裁判id"
-        },
-        "quarter": {
-          "type": "number",
-          "format": "int",
-          "description": "当前第几节比赛"
-        },
-        "count_down": {
-          "type": "number",
-          "format": "int",
-          "description": "当前节比赛倒计时(秒)"
-        },
-        "start_time": {
-          "type": "number",
-          "format": "int",
-          "description": "开始时间戳"
-        },
-        "end_time": {
-          "type": "number",
-          "format": "int",
-          "description": "结束时间戳"
-        },
-        "is_pause": {
-          "type": "number",
-          "format": "int",
-          "description": "当前是否暂停状态"
-        },
-        "pause_time": {
-          "type": "number",
-          "format": "int",
-          "description": "暂停时间戳"
-        },
-        "timeout_team_id": {
-          "type": "number",
-          "format": "int",
-          "description": "申请暂停的球队的id(非球队暂停则为0)"
-        },
-        "timeout_used": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TimeoutUsed"
-          }
-        },
-        "online_players": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OnlinePlayer"
-          }
-        },
-        "data_events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MatchEvent"
-          }
-        }
-      }
-    },
-    "TimeoutUsed": {
-      "properties": {
-        "team_id": {
-          "type": "number",
-          "format": "int",
-          "description": "球队id"
-        },
-        "timeout_count": {
-          "type": "number",
-          "format": "int",
-          "description": "本节已使用的暂停次数"
-        }
-      }
-    },
-    "OnlinePlayer": {
-      "properties": {
-        "match_schedule_id": {
-          "type": "number",
-          "format": "int",
-          "description": "联赛赛程id"
-        },
-        "team_id": {
-          "type": "number",
-          "format": "int",
-          "description": "球队id"
-        },
-        "user_id": {
-          "type": "number",
-          "format": "int",
-          "description": "球员id"
-        },
-        "is_online": {
-          "type": "number",
-          "format": "int",
-          "description": "当前是否在线"
-        },
-        "online_time": {
-          "type": "number",
-          "format": "int",
-          "description": "在线时长(单位秒)"
-        }
-      }
-    },
-    "MatchEvent": {
-      "properties": {
-        "match_schedule_id": {
-          "type": "number",
-          "format": "int",
-          "description": "联赛赛程id"
-        },
-        "team_id": {
-          "type": "number",
-          "format": "int",
-          "description": "球队id"
-        },
-        "user_id": {
-          "type": "number",
-          "format": "int",
-          "description": "球员id"
-        },
-        "quarter": {
-          "type": "number",
-          "format": "int",
-          "description": "当前第几节比赛"
-        },
-        "type": {
-          "type": "string",
-          "description": "事件类型：free_throw, two_pointer, three_pointer, rebound, assist, steal, block_shot, turnover, foul, others"
-        },
-        "type_value": {
-          "type": "number",
-          "format": "int",
-          "description": "事件值: 0, 1, 2, 3"
-        },
-        "event_message": {
-          "type": "string",
-          "description": "事件信息"
-        },
-        "event_time": {
-          "type": "number",
-          "format": "int",
-          "description": "事件发生时间戳"
-        },
-        "event_time_text": {
-          "type": "string",
-          "description": "事件发生时间字符串(如09:13)"
-        }
-      }
-    },
-    "MatchRule": {
       "properties": {
         "id": {
           "type": "string",
-          "description": "id"
+          "description": "设备id"
         },
-        "match_schedule_id": {
-          "type": "number",
-          "format": "int",
-          "description": "联赛赛程id"
+        "user": {
+          "$ref": "#/definitions/User",
+          "description": "用户"
         },
-        "total_quarter": {
-          "type": "number",
-          "format": "int",
-          "description": "比赛总节数"
+        "name": {
+          "type": "string",
+          "description": "设备名称"
         },
-        "time_per_quarter": {
+        "type": {
           "type": "number",
-          "format": "int",
-          "description": "每节赛时（单位秒）"
+          "format": "int32",
+          "description": "设备类型"
         },
-        "break_per_quarter": {
+        "status": {
           "type": "number",
-          "format": "int",
-          "description": "节间休息（单位秒）"
+          "format": "int32",
+          "description": "设备状态(0-正常 1-报警 2-异常  3-屏蔽)"
         },
-        "half_break": {
+        "connect_type": {
           "type": "number",
-          "format": "int",
-          "description": "半场休息（单位秒）"
+          "format": "int32",
+          "description": "设备连接类型(0-有线 1-无线)"
         },
-        "ot_time": {
+        "battery": {
           "type": "number",
-          "format": "int",
-          "description": "加时赛（单位秒）"
+          "format": "int32",
+          "description": "电量(0-100)"
         },
-        "ot_break": {
+        "signal": {
           "type": "number",
-          "format": "int",
-          "description": "加时赛休息（单位秒）"
+          "format": "int32",
+          "description": "信号强度"
         },
-        "personal_foul_limit": {
+        "address": {
           "type": "number",
-          "format": "int",
-          "description": "个人犯规次数限制"
+          "format": "int32",
+          "description": "设备的逻辑地址"
         },
-        "team_foul_limit": {
-          "type": "number",
-          "format": "int",
-          "description": "球队单节犯规次数"
+        "location": {
+          "type": "string",
+          "description": "设备的安装位置(如: 客房)"
         },
-        "first_half_timeout": {
+        "is_sign": {
           "type": "number",
-          "format": "int",
-          "description": "上半场暂停次数"
-        },
-        "second_half_timeout": {
-          "type": "number",
-          "format": "int",
-          "description": "下半场暂停次数"
-        },
-        "ot_timeout": {
-          "type": "number",
-          "format": "int",
-          "description": "加时赛暂停次数"
-        },
-        "timeout_seconds": {
-          "type": "number",
-          "format": "int",
-          "description": "每次暂停时间（单位秒）"
+          "format": "int32",
+          "description": "设备是否已点名(0-否 1-是)"
         }
       }
     },
-    "Dynamic": {
-      "properties": {
+    "Event" : {
+      "properties" : {
+        "device_id": {
+          "type": "string",
+          "description": "设备id"
+        },
         "title": {
           "type": "string",
-          "description": "动态标题"
+          "description": "事件标题"
         },
-        "summary": {
+        "location": {
           "type": "string",
-          "description": "概述"
+          "description": "设备位置"
         },
-        "content": {
-          "type": "string",
-          "description": "内容"
+        "start_time": {
+          "type": "long",
+          "description": "事件发生时间"
         },
-        "like_count":{
+        "end_time": {
+          "type": "long",
+          "description": "事件结束时间"
+        },
+        "status": {
+          "type": "long",
+          "description": "状态（0-未处理，1-已处理）"
+        }
+      }
+    },
+    "HostInfo": {
+      "properties": {
+        "status": {
           "type": "number",
-          "format": "int",
-          "description": "点赞次数"
+          "format": "int32",
+          "description": "设备状态(0-正常 1-报警 2-异常)"
         },
-        "is_liked":{
-          "type":"number",
-          "format":"int",
-          "description": "是否有点赞(0.否，1.是)"
-        },
-        "messages": {
-          "description": "留言列表",
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/DynamicMessage"
-          }
-        }
-      }
-    },
-    "DynamicMessage": {
-      "properties": {
-        "content": {
+        "message": {
           "type": "string",
-          "description": "留言内容"
+          "description" :"设备状态信息(如:xx失联 xx低电 xx发现火警)"
         },
-        "user": {
-          "description": "用户",
-          "$ref": "#/definitions/User"
-        }
-      }
-    },
-    "Timeline": {
-      "properties": {
-        "content": {
+        "time": {
+          "type": "long",
+          "description": "上次产生记录的时间"
+        },
+        "contact": {
           "type": "string",
-          "description": "内容"
+          "description" :"联系信息"
         },
-        "team": {
-          "description": "球队",
-          "$ref": "#/definitions/Team"
+        "alarm_count": {
+          "type": "number",
+          "format": "int32",
+          "description": "报警数量"
+        },
+        "exception_count": {
+          "type": "number",
+          "format": "int32",
+          "description": "异常数量"
+        },
+        "normal_count": {
+          "type": "number",
+          "format": "int32",
+          "description": "正常数量"
         }
       }
     },
-    "TeamWonderful": {
+    "FireFightingInfo": {
       "properties": {
-        "content": {
+        "fire_phone": {
           "type": "string",
-          "description": "留言内容"
+          "description": "火警电话"
         },
-        "user": {
-          "description": "用户",
-          "$ref": "#/definitions/User"
-        },
-        "images": {
-          "description": "图片",
-          "type":"array",
-          "items":{
-            "$ref": "#/definitions/Image"
-          }
+        "manager_phone": {
+          "type": "string",
+          "description": "物业管理电话"
         }
       }
     },
-    "BaseModel": {
+    "Address": {
+      "properties": {
+        "detail": {
+          "type": "string",
+          "description": "地址内容"
+        }
+      }
+    },
+    "Project": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "项目ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "项目名称"
+        }
+      }
+    },
+    "Urgency": {
+      "properties": {
+
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "联系人对象数组"
+        },
+        "address": {
+          "type": "string",
+          "description": "设备所在地"
+        },
+        "fire_phone": {
+          "type": "string",
+          "description": "微型消防站电话"
+        },
+        "manager_phone": {
+          "type": "string",
+          "description": "物业管理电话"
+        }
+      }
+    },
+    "AppVersion": {
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "app下载地址"
+        },
+        "version_code": {
+          "type": "number",
+          "format": "int32",
+          "description": "version code"
+        },
+        "version_name": {
+          "type": "string",
+          "description": "version name"
+        }
+      }
+    },
+    "RspModel": {
       "properties": {
         "code": {
           "type": "number",
-          "format": "int",
+          "format": "int32",
           "description": "API返回代号"
         },
         "message": {
           "type": "string",
           "description": "描述信息"
-        },
-        "id": {
-          "type": "number",
-          "format": "int",
-          "description": "id"
-        },
-        "create_time": {
-          "type": "number",
-          "format": "int",
-          "description": "创建时间"
-        },
-        "update_time": {
-          "type": "number",
-          "format": "int",
-          "description": "更新时间"
         }
       }
     }

@@ -73,6 +73,16 @@ export class GenModel {
         }
         return inputType;
     }
+    //convert to typescript type
+    toTsPropertyType(p = property){
+        let inputType = p.type;
+        if (inputType == 'array'){
+            return 'Array<' + p.gencricType + '>';
+        }else if (inputType == 'long') {
+            return 'number'
+        }
+        return inputType;
+    }
     getModels(api_data) {
         let models = Object.keys(api_data.definitions);
         return models.map((key) => {
@@ -92,7 +102,7 @@ export class GenModel {
                         }
 
                         return {
-                            name: Utils.toCamelName(k, '_'),
+                            name: k,
                             type: pItem.type || refType,
                             format: pItem.format,
                             gencricType: isArray ? refType : null,
@@ -115,14 +125,16 @@ export class GenModel {
             _m.packageName = this.config.packageName;
             _m.refs = [];
             _m.gencrics = [];
-            _m.properties = m.properties.map(
+            _m.properties = _m.properties.map(
                 (p) => {
                     if (p.refType || p.gencricType){
                         if (p.refType != 'BaseModel'){
                             _m.refs.push(p.refType);
                         }
                     }
-                    return Object.assign({}, p, {type: this.toJavaPropertyType(p)});
+                    let newP = Object.assign({}, p, {type: this.toJavaPropertyType(p)});
+                    newP.name = Utils.toCamelName(newP.name, '_')
+                    return newP
                 }
             );
 
@@ -150,7 +162,9 @@ export class GenModel {
                         _m.refs.push({gencricType: p.gencricType});
                     }
 
-                    return Object.assign({}, p, {type: this.toObjcPropertyType(p)})
+                    let newP = Object.assign({}, p, {type: this.toObjcPropertyType(p)})
+                    newP.name = Utils.toCamelName(newP.name, '_')
+                    return newP
                 }
             );
 
@@ -160,6 +174,30 @@ export class GenModel {
             let path_m = './code_output/objc/model/' + this.config.objcPrefix + _m.name + '.m';
             fs.writeFileSync(path_h, value_h);
             fs.writeFileSync(path_m, value_m);
+        });
+
+
+        this.config.models.forEach((m) => {
+            //create ts code
+            let codeTmp = fs.readFileSync('./src/model/model_ts.mustache', 'utf8');
+            let _m = Object.assign({}, m);
+            _m.packageName = this.config.packageName;
+            _m.refs = [];
+            _m.gencrics = [];
+            _m.properties = _m.properties.map(
+                (p) => {
+                    if (p.refType || p.gencricType){
+                        if (p.refType != 'BaseModel'){
+                            _m.refs.push(p.refType);
+                        }
+                    }
+                    return Object.assign({}, p, {type: this.toTsPropertyType(p)});
+                }
+            );
+
+            let value = mustache.render(codeTmp, _m);
+            let path = './code_output/ts/model/'+_m.name+'.ts';
+            fs.writeFileSync(path, value);
         });
 
         console.log('Model code were generated to dir \'./code_output\' successfully!!');

@@ -1,0 +1,16 @@
+import BaseModel from '../BaseModel'
+
+{{#refs}}
+import {{{.}}} from './{{{.}}}';
+{{/refs}}
+
+/**
+ * {{doc}}
+ */
+export default class {{name}} extends BaseModel  {
+
+  {{#properties}}
+    /**{{doc}}*/
+    public {{name}}?: {{{type}}}
+  {{/properties}}
+}

@@ -110,24 +110,28 @@ const itemJava = `
 `
 
 const itemTs = `
-export function userApiLogin(
+{{#apis}}
+/**
+ * {{doc}}
+ */
+export function {{name}}(
     parameters: {
-        phone: string,
-        password: string,
+        {{#parameters}}
+        {{name}}: {{type}},
+        {{/parameters}}
     },
-    success: (result: RequestResult<User>) => void,
+    success: (result: Request{{#isList}}List{{/isList}}Result<{{responseType}}>) => void,
     failure: (error: RequestError) => void
 ) {
-    request<User>(
-        '/UserApi/login',
-        {
-            phone: 13800138001,
-            password: 1234,
-        },
+    request{{#isList}}List{{/isList}}<{{responseType}}>(
+        '{{method}}',
+        '{{{path}}}',
+        {...parameters},
         success,
         failure
     )
 }
+{{/apis}}
 `
 
 /**生成REST API代码 */
@@ -209,6 +213,40 @@ export class RestModel {
             allRef = allRef.filter((type) => {return type != 'BaseModel'});
         }
         return Array.from(new Set(allRef));
+    }
+
+    genTsCode(dir){
+        let getParamType = (paramItem) => {
+            let inputType = paramItem.type;
+            if(inputType == 'number'){
+                return Utils.getNumberType(paramItem.format, false);
+            }else if (inputType == 'string'){
+                return 'String';
+            }else if (inputType == 'file'){
+                return 'Map<String, RequestBody>';
+            }
+            return inputType;
+        }
+        let config = Object.assign({}, this.config);
+        config.apis = config.apis.map((apiItem) => {
+            let result = Object.assign(apiItem, {
+                parameters: apiItem.parameters.map(
+                    (paramItem, i) => {
+                        return Object.assign(paramItem, {
+                            parameterType: getParamType(paramItem),
+                        })
+                    })
+            });
+            return result;
+        });
+
+        let value = mustache.render(itemTs, config);
+        let otherCode = fs.readFileSync('./src/rest/rest_ts.mustache', 'utf8');
+        value = mustache.render(otherCode, Object.assign({
+            refs: this.getRefList(this.config.apis, true),
+            code: value
+        }, this.config));
+        fs.writeFileSync('./' + dir + '/index.ts', value);
     }
     
     genJavaCode(dir){

@@ -3,7 +3,7 @@ const config = {
     packageName: "com.kollway.tanda",
     targetName: "iTanda",
     demoUrl: "http://192.168.0.2:8888",
-    baseUrl: "https://tanda.kollway.com",
+    baseUrl: "http://wireless.jzxfyun.com:5000/Thingworx/Things/AppHomeServiceThing/Services",
     objcPrefix: "KWM",
     pageSize: 20,
     apiDir: {

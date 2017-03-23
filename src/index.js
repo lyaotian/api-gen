@@ -58,11 +58,10 @@ function copyToMyProject(isCopyJava = false, isCopyObjc = false, isCopyTs = fals
         fs.copySync(copyFrom, copyTo);
         console.log(copyFrom + ' => ' + copyTo);
 
-        //TODO API
-        // copyFrom = outDir + '/java/REST.java';
-        // copyTo = apiDir + '/REST.java';
-        // fs.copy(copyFrom, copyTo);
-        // console.log(copyFrom + ' => ' + copyTo);
+        copyFrom = outDir + '/ts/index.ts';
+        copyTo = apiDir + '/index.ts';
+        fs.copy(copyFrom, copyTo);
+        console.log(copyFrom + ' => ' + copyTo);
     }
 }
 

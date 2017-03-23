@@ -8,24 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AFNetworking/AFNetworking.h>
 #import "KWMRequestListResult.h"
 #import "KWMRequestResult.h"
+#import "KWMAPIBase.h"
 
 #define KWM_PAGE_SIZE                   {{pageSize}}
+#define DEMO_URL                        @"{{{demoUrl}}}"
 #define BASE_URL                        @"{{{baseUrl}}}"
 
 {{#refs}}
 @class {{objcPrefix}}{{.}};
 {{/refs}}
 
-@interface KWMAPIManager : NSObject
-
-@property (nonatomic) NSString *baseUrl;
+@interface KWMAPIManager : KWMAPIBase
 
 + (KWMAPIManager *)sharedManager;
-- (NSString *)toAbsoluteUrl:(NSString *)relativeUrl;
-- (NSString *)getSMSAPIToken:(NSString *)phone;
 
 {{{code}}}
 

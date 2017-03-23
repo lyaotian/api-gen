@@ -237,27 +237,15 @@ export class RestModel {
 
         let value = mustache.render(itemJava, javaConfig);
         let otherCode = fs.readFileSync('./src/rest/rest_java.mustache', 'utf8');
-        value = mustache.render(otherCode, {
-            pageSize: this.config.pageSize,
-            baseUrl: this.config.baseUrl,
-            port: this.config.port,
-            packageName: this.config.packageName,
+        value = mustache.render(otherCode, Object.assign({
             refs: this.getRefList(this.config.apis, true),
             code: value
-        });
+        }, this.config));
         fs.writeFileSync('./' + dir + '/REST.java', value);
     }
 
     genObjcCode(dir){
-
-        let otherConfig = {
-            pageSize: this.config.pageSize,
-            baseUrl: this.config.baseUrl,
-            port: this.config.port,
-            objcPrefix: this.config.objcPrefix,
-            targetName: this.config.targetName,
-            refs: this.getRefList(this.config.apis, false)
-        };
+        let otherConfig = Object.assign({refs: this.getRefList(this.config.apis, false)}, this.config);
 
         let value = mustache.render(itemObjcH, this.config);
         let codeHtmp = fs.readFileSync('./src/rest/rest_objc_h.mustache', 'utf8');

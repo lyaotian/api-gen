@@ -4,10 +4,11 @@ import { Utils } from './utils'
 
 const fs = require('fs-extra');
 const config = {
-    url: 'api json',
-    packageName: "",
-    targetName: "XCode targe",
-    baseUrl: "http://192.168.0.2:8888",
+    url: 'http://kollway-kollway.oschina.io/api-doc/project/fws.json',
+    packageName: "com.kollway.fws",
+    targetName: "iFws",
+    demoUrl: "http://192.168.0.2:8888",
+    baseUrl: "https://vem.kollway.com",
     objcPrefix: "KWM",
     pageSize: 20,
     apiDir: {

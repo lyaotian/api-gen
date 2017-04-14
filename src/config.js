@@ -1,9 +1,9 @@
 const config = {
-    url: 'http://kollway-kollway.oschina.io/api-doc/project/zxwl-api-docs.json_',
+    url: 'http://kollway-kollway.oschina.io/api-doc/project/zxwl-api-docs.json',
     packageName: "com.kollway.tanda",
     targetName: "iTanda",
-    demoUrl: "http://192.168.0.2:8888",
-    baseUrl: "http://wireless.jzxfyun.com:5000/Thingworx/Things/AppHomeServiceThing/Services",
+    demoUrl: "http://xf.tandatech.com:5000/Thingworx/Things/ThreePlaceSystem_AppThing/Services",
+    baseUrl: "http://xf.tandatech.com:5000/Thingworx/Things/ThreePlaceSystem_AppThing/Services",
     objcPrefix: "KWM",
     pageSize: 20,
     apiDir: {

@@ -319,8 +319,8 @@ export class RestModel {
     }
 
     launch(){
-        // this.genJavaCode('code_output/java');
-        // this.genObjcCode('code_output/objc');
+        this.genJavaCode('code_output/java');
+        this.genObjcCode('code_output/objc');
         this.genTsCode('code_output/ts');
 
         console.log('REST API code were generated to dir \'./code_output\' successfully!!');

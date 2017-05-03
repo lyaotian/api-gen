@@ -1,11 +1,15 @@
 import { request, requestList, RequestError } from '../utils/http'
 import RequestResult from '../api/RequestResult'
 import RequestListResult from '../api/RequestListResult'
+import BaseModel from "./BaseModel";
+
 {{#refs}}
 import {{.}} from './model/{{.}}'
 {{/refs}}
 
+export const PAGE_SIZE = {{pageSize}}
 export const BASE_URL = "{{{baseUrl}}}"
+export const DEMO_URL = "{{{demoUrl}}}"
 
 {{{code}}}
 

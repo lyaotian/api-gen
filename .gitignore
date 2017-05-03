@@ -6,3 +6,4 @@ code_output/
 copy.sh
 clean.sh
 .idea
+src/*.config.js

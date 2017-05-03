@@ -72,17 +72,26 @@ export class GenModel {
         }else if (inputType == 'string'){
             return 'String';
         }
+
         return inputType;
     }
-    //convert to typescript type
-    toTsPropertyType(p = property){
+    //convert to typescript type default value
+    toTsPropertyTypeValue(p = property){
         let inputType = p.type;
         if (inputType == 'array'){
-            return 'Array<' + p.gencricType + '>';
-        }else if (inputType == 'long') {
-            return 'number'
+            return 'new Array<' + p.genericType + '>()';
+        }else if (
+        inputType == 'long' || 
+        inputType == 'number' || 
+        inputType == 'int' || 
+        inputType == 'double' || 
+        inputType == 'float'
+        ) {
+            return 0
+        }else if (inputType == 'string') {
+            return '""'
         }
-        return inputType;
+        return "new " + inputType + "()";
     }
     getModels(api_data) {
         let models = Object.keys(api_data.definitions);
@@ -190,12 +199,12 @@ export class GenModel {
             _m.gencrics = [];
             _m.properties = _m.properties.map(
                 (p) => {
-                    if (p.refType || p.gencricType){
+                    if (p.refType || p.genericType){
                         if (p.refType != 'BaseModel'){
                             _m.refs.push(p.refType);
                         }
                     }
-                    return Object.assign({}, p, {type: this.toTsPropertyType(p)});
+                    return Object.assign({}, p, {typeValue: this.toTsPropertyTypeValue(p)});
                 }
             );
 

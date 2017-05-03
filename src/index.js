@@ -75,7 +75,7 @@ function doWork() {
     new GenModel(config).launch();
     new RestModel(config).launch();
 
-    copyToMyProject(false, false, true);
+    copyToMyProject(true, true, true);
 }
 
 export function start() {
@@ -92,5 +92,3 @@ export function start() {
             doWork();
         })
 }
-
-start()

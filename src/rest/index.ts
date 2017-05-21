@@ -12,9 +12,25 @@
  *  6. 引用其它类(java:import,objc:#import)
  *  7. 上传文件API
  */
-import { Utils } from '../utils'
-import fs from 'fs';
-import mustache from 'mustache';
+import { Utils } from '../utils/index'
+import * as mustache from 'mustache'
+const fs = require('fs-extra')
+const path = require('path')
+const root = '.'
+
+interface APIItem {
+    method: "POST"|"GET"
+    parameters: APIParameter[]
+    isUpload: boolean
+}
+interface APIParameter {
+    name: string
+    in: string
+    description: string
+    required: boolean
+    type: string
+    format: string
+}
 
 const api = {
     doc: "User login",
@@ -37,7 +53,7 @@ const api = {
 const itemObjcH = `
 {{#apis}}
 /**
- * {{doc}}
+ * {{{doc}}}
 {{#parameters}}
  * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
 {{/parameters}}
@@ -54,7 +70,7 @@ const itemObjcH = `
 const itemObjcM = `
 {{#apis}}
 /**
- * {{doc}}
+ * {{{doc}}}
 {{#parameters}}
  * @param {{name}}{{^isRequired}}(可选)({{/isRequired}}    {{{doc}}}
 {{/parameters}}
@@ -92,7 +108,7 @@ const itemObjcM = `
 const itemJava = `
   {{#apis}}
     /**
-     * {{doc}}
+     * {{{doc}}}
      *
        {{#parameters}}
      * @param {{name}}{{^isRequired}}(可选)    {{/isRequired}} {{{doc}}}
@@ -112,12 +128,12 @@ const itemJava = `
 const itemTs = `
 {{#apis}}
 /**
- * {{doc}}
+ * {{{doc}}}
  */
 export function {{name}}(
     parameters: {
         {{#parameters}}
-        {{name}}: {{type}},
+        {{name}}: {{parameterType}},
         {{/parameters}}
     },
     success: (result: Request{{#isList}}List{{/isList}}Result<{{responseType}}>) => void,
@@ -137,20 +153,21 @@ export function {{name}}(
 /**生成REST API代码 */
 export class RestModel {
 
-    constructor(config = {}){
-        const fileName = './src/api-docs.json';
-        const fs = require('fs-extra');
+    config: any
+
+    constructor(config: Config){
+        const fileName = root + '/api-docs.json';
         if (!fs.existsSync(fileName)){
             throw new Error("api-docs.json doesn't exists!");
         }
         const api_data = fs.readJsonSync(fileName);
         //create mustache data.json
-        this.config = Object.assign(config,{
+        this.config = {...config, ...{
             apis: this.getAPIs(api_data)
-        });
+        }}
     }
 
-    getAPIs(api_data){
+    getAPIs(api_data: any){
         let paths = Object.keys(api_data.paths);
 
         let result = paths.map(
@@ -185,9 +202,9 @@ export class RestModel {
                     name: Utils.toCamelName(path, '/'),
                     method: httpMethod.toUpperCase(),
                     isList: isList,
-                    isUpload: content.parameters.some((p) => {return p.type == 'file'}),
+                    isUpload: content.parameters.some((p: APIParameter) => {return p.type == 'file'}),
                     responseType: responseType,
-                    parameters: content.parameters.map((p, i) => {
+                    parameters: content.parameters.map((p: APIParameter, i: number) => {
                         return {
                             name: p.name,
                             doc: p.description,
@@ -204,7 +221,7 @@ export class RestModel {
         return result;
     }
 
-    getRefList(apis, isJava = true) {
+    getRefList(apis: any[], isJava = true) {
         let allRef = apis.map(
         (api) => {
             return api.responseType
@@ -215,23 +232,19 @@ export class RestModel {
         return Array.from(new Set(allRef));
     }
 
-    genTsCode(dir){
-        let getParamType = (paramItem) => {
+    genTsCode(dir: string){
+        let getParamType = (paramItem: APIParameter) => {
             let inputType = paramItem.type;
-            if(inputType == 'number'){
-                return Utils.getNumberType(paramItem.format, false);
-            }else if (inputType == 'string'){
-                return 'String';
-            }else if (inputType == 'file'){
-                return 'Map<String, RequestBody>';
+            if (inputType == 'file'){
+                return 'string';
             }
             return inputType;
         }
         let config = Object.assign({}, this.config);
-        config.apis = config.apis.map((apiItem) => {
+        config.apis = config.apis.map((apiItem: APIItem) => {
             let result = Object.assign(apiItem, {
                 parameters: apiItem.parameters.map(
-                    (paramItem, i) => {
+                    (paramItem: APIParameter, i: number) => {
                         return Object.assign(paramItem, {
                             parameterType: getParamType(paramItem),
                         })
@@ -241,7 +254,7 @@ export class RestModel {
         });
 
         let value = mustache.render(itemTs, config);
-        let otherCode = fs.readFileSync('./src/rest/rest_ts.mustache', 'utf8');
+        let otherCode = fs.readFileSync(root + '/template/rest_ts.mustache', 'utf8');
         value = mustache.render(otherCode, Object.assign({
             refs: this.getRefList(this.config.apis, true),
             code: value
@@ -249,20 +262,20 @@ export class RestModel {
         fs.writeFileSync('./' + dir + '/index.ts', value);
     }
     
-    genJavaCode(dir){
-        let getParameterMethod = (api) => {
+    genJavaCode(dir: string){
+        let getParameterMethod = (api: APIItem) => {
             if (api.method == 'POST'){
                 return api.isUpload ? 'Part' : 'Field';
             }
             return 'Query';
         }
-        let getMethodAnnotation = (api) => {
+        let getMethodAnnotation = (api: APIItem) => {
             if (api.method == 'POST'){
                 return api.isUpload ? '@Multipart' : '@FormUrlEncoded';
             }
             return '';
         }
-        let getParamType = (paramItem) => {
+        let getParamType = (paramItem: APIParameter) => {
             let inputType = paramItem.type;
             if(inputType == 'number'){
                 return Utils.getNumberType(paramItem.format, false);
@@ -274,16 +287,16 @@ export class RestModel {
             return inputType;
         }
         let javaConfig = Object.assign({}, this.config);
-        javaConfig.apis = javaConfig.apis.map((apiItem) => {
+        javaConfig.apis = javaConfig.apis.map((apiItem: APIItem) => {
             let result = Object.assign(apiItem, {
                 methodAnnotation: getMethodAnnotation(apiItem),
                 parameters: apiItem.parameters.map(
-                    (paramItem, i) => {
+                    (paramItem: APIParameter, i: number) => {
                         let name = paramItem.name;
                         let method = getParameterMethod(apiItem);
                         if (method == 'Part' && i == apiItem.parameters.length - 1){
                             method = 'PartMap';
-                            name = null;
+                            name = '';
                         }
                         return Object.assign(paramItem, {
                             fieldName: name,
@@ -296,7 +309,7 @@ export class RestModel {
         });
 
         let value = mustache.render(itemJava, javaConfig);
-        let otherCode = fs.readFileSync('./src/rest/rest_java.mustache', 'utf8');
+        let otherCode = fs.readFileSync(root + '/template/rest_java.mustache', 'utf8');
         value = mustache.render(otherCode, Object.assign({
             refs: this.getRefList(this.config.apis, true),
             code: value
@@ -304,16 +317,16 @@ export class RestModel {
         fs.writeFileSync('./' + dir + '/REST.java', value);
     }
 
-    genObjcCode(dir){
+    genObjcCode(dir: string){
         let otherConfig = Object.assign({refs: this.getRefList(this.config.apis, false)}, this.config);
 
         let value = mustache.render(itemObjcH, this.config);
-        let codeHtmp = fs.readFileSync('./src/rest/rest_objc_h.mustache', 'utf8');
+        let codeHtmp = fs.readFileSync(root + '/template/rest_objc_h.mustache', 'utf8');
         let codeH = mustache.render(codeHtmp, Object.assign(otherConfig, {code: value}));
         fs.writeFileSync('./' + dir + '/KWMAPIManager.h', codeH);
 
         value = mustache.render(itemObjcM, this.config);
-        let codeMtmp = fs.readFileSync('./src/rest/rest_objc_m.mustache', 'utf8');
+        let codeMtmp = fs.readFileSync(root + '/template/rest_objc_m.mustache', 'utf8');
         let codeM = mustache.render(codeMtmp, Object.assign(otherConfig, {code: value}));
         fs.writeFileSync('./' + dir + '/KWMAPIManager.m', codeM);
     }

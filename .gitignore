@@ -3,7 +3,6 @@ node_modules/
 npm-debug.log
 bin/
 code_output/
-copy.sh
-clean.sh
 .idea
-src/*.config.js
+config.json
+api-docs.json

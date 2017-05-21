@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./bin/",
+        "target": "es6",
+        "module": "es6",
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "experimentalDecorators": true,
+        "preserveConstEnums": true,
+        "allowJs": false,
+        "sourceMap": true
+    },
+    "include": [
+        "src/index.d.ts",
+        "src/**/*"
+    ],
+    "exclude": [
+        "**/*.spec.ts"
+    ]
+}

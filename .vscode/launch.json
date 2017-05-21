@@ -1,46 +1,32 @@
 {
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/index.js",
+            "program": "${workspaceRoot}/bin/bundle.js",
+            "cwd": "${workspaceRoot}/bin",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "sourceMaps": true,
+            "outFiles": ["${workspaceRoot}/bin/**/*"],
             "stopOnEntry": false,
-            "args": [],
-            "cwd": "${workspaceRoot}",
+            "args": [
+                "-c",
+                "../config.json",
+                "-o",
+                "ts"
+            ],
             "preLaunchTask": null,
             "runtimeExecutable": null,
             "runtimeArgs": [
                 "--nolazy"
-            ],
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "externalConsole": false,
-            "sourceMaps": true,
-            "outDir": "${workspaceRoot}/bin"
-        },
-        {
-            "name": "Attach",
-            "type": "node",
-            "request": "attach",
-            "port": 5858,
-            "address": "localhost",
-            "restart": false,
-            "sourceMaps": true,
-            "outDir": "${workspaceRoot}/bin",
-            "localRoot": "${workspaceRoot}",
-            "remoteRoot": null
-        },
-        {
-            "name": "Attach to Process",
-            "type": "node",
-            "request": "attach",
-            "processId": "${command.PickProcess}",
-            "port": 5858,
-            "sourceMaps": true,
-            "outDir": "${workspaceRoot}/bin"
+            ]
         }
     ]
 }

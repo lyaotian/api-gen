@@ -11,33 +11,24 @@
  *  5. (ok)Java泛型/Objc protocol
  */
 
-import { Utils } from '../utils'
-import fs from 'fs';
-import mustache from 'mustache';
+import { Utils } from '../utils/index'
 
-const property = {
-    name: "id",
-    type: "int",
-    genericType: null,
-    refType: null,
-    isArray: false,
-    doc: "描述"
-};
-const model = {
-    doc: "User",
-    name: "User",
-    refs: [
-        {refType: "", genericType: ""}
-    ],/**引用其它类 */
-    properties: [property]
-}
+import * as mustache from 'mustache'
+import Property from './Property'
+import Model from './Model'
+const fs = require('fs-extra');
+const path = require('path')
+const root = '.'
+
+const property = new Property()
+const model = new Model()
 
 /**生成Model类代码 */
 export class GenModel {
+    config: any
 
     constructor(config = {}){
-        const fileName = './src/api-docs.json';
-        const fs = require('fs-extra');
+        const fileName = root + '/api-docs.json';
         if (!fs.existsSync(fileName)){
             throw new Error("api-docs.json doesn't exists!");
         }
@@ -93,7 +84,8 @@ export class GenModel {
         }
         return "new " + inputType + "()";
     }
-    getModels(api_data) {
+    
+    getModels(api_data: any) {
         let models = Object.keys(api_data.definitions);
         return models.map((key) => {
             let m = api_data.definitions[key];
@@ -129,14 +121,14 @@ export class GenModel {
 
     launch(){
         //read model_*.mustache file and create model code
-        this.config.models.forEach((m) => {
+        this.config.models.forEach((m: Model) => {
             //create java code
-            let codeTmp = fs.readFileSync('./src/model/model_java.mustache', 'utf8');
-            let _m = Object.assign({}, m);
+            let codeTmp = fs.readFileSync(root + '/template/model_java.mustache', 'utf8');
+            let _m: any = Object.assign({}, m);
             _m.packageName = this.config.packageName;
             _m.refs = [];
             _m.properties = _m.properties.map(
-                (p) => {
+                (p: Property) => {
                     if (p.refType || p.genericType){
                         if (p.refType != 'BaseModel'){
                             _m.refs.push(p.refType);
@@ -153,17 +145,17 @@ export class GenModel {
             fs.writeFileSync(path, value);
         });
 
-        this.config.models.forEach((m) => {
+        this.config.models.forEach((m: Model) => {
             //create objc code
-            let codeTmp_h = fs.readFileSync('./src/model/model_objc_h.mustache', 'utf8');
-            let codeTmp_m = fs.readFileSync('./src/model/model_objc_m.mustache', 'utf8');
+            let codeTmp_h = fs.readFileSync(root + '/template/model_objc_h.mustache', 'utf8');
+            let codeTmp_m = fs.readFileSync(root + '/template/model_objc_m.mustache', 'utf8');
 
-            let _m = Object.assign({}, m);
+            let _m: any = Object.assign({}, m);
             _m.prefix = this.config.objcPrefix;
             _m.packageName = this.config.packageName;
             _m.refs = [];
             _m.properties = _m.properties.map(
-                (p) => {
+                (p: Property) => {
                     if (p.refType && !p.genericType){
                         if (p.refType == m.extends) {
                             //use #import "..."
@@ -190,18 +182,20 @@ export class GenModel {
         });
 
 
-        this.config.models.forEach((m) => {
+        this.config.models.forEach((m: Model) => {
             //create ts code
-            let codeTmp = fs.readFileSync('./src/model/model_ts.mustache', 'utf8');
-            let _m = Object.assign({}, m);
+            let codeTmp = fs.readFileSync(root + '/template/model_ts.mustache', 'utf8');
+            let _m: any = Object.assign({}, m);
             _m.packageName = this.config.packageName;
             _m.refs = [];
             _m.gencrics = [];
             _m.properties = _m.properties.map(
-                (p) => {
+                (p: Property) => {
                     if (p.refType || p.genericType){
                         if (p.refType != 'BaseModel'){
-                            _m.refs.push(p.refType);
+                            if (!_m.refs.some((item: string) => item == p.refType)) {
+                                _m.refs.push(p.refType);
+                            }
                         }
                     }
                     return Object.assign({}, p, {typeValue: this.toTsPropertyTypeValue(p)});

@@ -1,0 +1,17 @@
+import BaseModel = require('../BaseModel')
+
+{{#refs}}
+import {{{.}}} = require('./{{{.}}}')
+{{/refs}}
+
+/**
+ * {{doc}}
+ */
+class {{name}} extends {{#extends}}{{.}}{{/extends}}{{^extends}}BaseModel{{/extends}}  {
+
+  {{#properties}}
+    /**{{doc}}*/
+    public {{name}} = {{{typeValue}}}
+  {{/properties}}
+}
+export = {{name}}

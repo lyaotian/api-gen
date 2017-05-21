@@ -1,0 +1,76 @@
+import ResultWrapper = require('../ResultWrapper')
+import RequestResult = require("../RequestResult")
+import RequestListResult = require("../RequestListResult")
+import BaseModel = require('../BaseModel')
+{{#refs}}
+import {{{.}}} = require('../model/{{{.}}}')
+{{/refs}}
+//code1
+{{{code1}}}
+//code1
+
+/**
+ * {{{doc}}}
+ */
+class {{name}} {
+    
+    get path(): string {
+        return '{{{path}}}'
+    }
+    
+    get isUpload(): boolean {
+        return {{{isUpload}}}
+    }
+
+    setup(app: any, path: string) {
+        console.log('setup service: /' + path)
+    }
+
+    {{#isGET}}
+    //GET
+    find(params: any, callback: Function) {
+        return this.doWork(params.query)
+    }
+    {{/isGET}}
+    {{^isGET}}
+    //POST
+    create(data: any, params: any) {
+        return this.doWork(data)
+    }
+    {{/isGET}}
+
+    doWork(params: any): Promise<any> {
+
+        {{#isList}}
+        let page = params.page
+        let page_size = params.page_size || RequestListResult.PAGE_SIZE
+        {{/isList}}
+        {{#parameters}}
+        /**{{{description}}}*/
+        let {{name}}: {{type}} = params.{{name}}
+        {{/parameters}}
+
+
+        let callback = (
+            resolve: (data: Request{{#isList}}List{{/isList}}Result<{{dataType}}>) => void, 
+            reject: (error: Error) => void) => {
+
+            let data = new {{dataType}}()
+            let result = ResultWrapper.wrap{{#isList}}List{{/isList}}({{#isList}}[data]{{/isList}}{{^isList}}data{{/isList}})
+            {{#isList}}
+            result.page = page
+            result.page_size = page_size
+            result.total_count = 3 * page_size + page_size/2
+            {{/isList}}
+            result.message = '假数据'
+
+//code2
+{{{code2}}}
+//code2
+            resolve(result)
+        }
+        return new Promise(callback)
+    }
+}
+
+export = {{name}}

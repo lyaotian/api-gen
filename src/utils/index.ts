@@ -17,10 +17,10 @@ export class Utils {
     //     }
     // }
 
-    static getNumberType(format, isObjc = false) {
+    static getNumberType(format: string = '', isObjc = false): string {
         if (!format){
             console.warn('missing number format!!');
-            return;
+            return '';
         }
 
         if (format == 'int32' || format == 'int' || format == 'integer'){
@@ -46,7 +46,7 @@ export class Utils {
     }
 
     /**转换成首字母小写的驼峰式命名 */
-    static toCamelName(input = '', divide = '/'){
+    static toCamelName(input = '', divide = '/'): string{
         let result = input;
         let divideIndex = input.indexOf(divide);
         if (divideIndex == 0){

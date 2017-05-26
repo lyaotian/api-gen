@@ -1,6 +1,7 @@
 package {{packageName}}.api.model;
 import {{packageName}}.api.BaseModel;
 import java.util.ArrayList;
+import android.support.annotation.Nullable;
 
 {{#refs}}
 import {{packageName}}.api.model.{{{.}}};
@@ -13,6 +14,7 @@ public class {{name}} extends {{extends}}  {
 
   {{#properties}}
     /**{{doc}}*/
+    {{#nullable}}@Nullable{{/nullable}}
     public {{{type}}} {{name}};
   {{/properties}}
 }

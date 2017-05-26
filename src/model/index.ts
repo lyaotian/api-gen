@@ -66,6 +66,15 @@ export class GenModel {
 
         return inputType;
     }
+
+    isJavaPropertyNullable(p = property): boolean{
+        let inputType = p.type;
+        if (inputType == 'number'){
+            return false
+        }
+
+        return true;
+    }
     //convert to typescript type default value
     toTsPropertyTypeValue(p = property){
         let inputType = p.type;
@@ -134,7 +143,14 @@ export class GenModel {
                             _m.refs.push(p.refType);
                         }
                     }
-                    let newP = Object.assign({}, p, {type: this.toJavaPropertyType(p)});
+                    let newP = Object.assign(
+                        {}, 
+                        p, 
+                        {
+                            type: this.toJavaPropertyType(p),
+                            nullable: this.isJavaPropertyNullable(p)
+                        }
+                        );
                     newP.name = Utils.toCamelName(newP.name, '_')
                     return newP
                 }

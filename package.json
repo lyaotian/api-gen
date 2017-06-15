@@ -1,13 +1,14 @@
 {
   "name": "api-gen",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "main": "bin/bundle.js",
   "scripts": {
     "prebuild": "rm -rf ./bin",
     "start": "webpack && node bin/bundle.js",
     "server": "webpack-dev-server --config webpack.config.js --hot --inline --progress --colors --port 3002",
-    "build": "NODE_ENV=production webpack --config webpack.config.prod.js --progress --colors"
+    "build": "NODE_ENV=production webpack --config webpack.config.prod.js --progress --colors",
+    "w": "tsc -w --pretty"
   },
   "keywords": [],
   "author": "",
@@ -28,5 +29,6 @@
     "source-map-loader": "^0.2.1",
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
-  }
+  },
+  "devDependencies": {}
 }

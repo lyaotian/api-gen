@@ -184,6 +184,9 @@ export class RestModel {
                 let isList = response.type == 'array';
                 let responseType = Utils.getRefType(isList ? response.items.$ref : response.$ref);
                 let path = key;
+                if (!content.parameters) {
+                    content.parameters = []
+                }
 
                 if (isList){
                     content.parameters.splice(0, 0, {

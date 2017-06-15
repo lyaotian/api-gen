@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": "Webpack",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/bin/bundle.js",
@@ -20,7 +20,31 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "ts"
+                "backend"
+            ],
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy"
+            ]
+        },
+        {
+            "name": "TSC",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/index.js",
+            "cwd": "${workspaceRoot}/bin",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "sourceMaps": true,
+            "outFiles": ["${workspaceRoot}/bin/**/*"],
+            "stopOnEntry": false,
+            "args": [
+                "-c",
+                "../config.json",
+                "-o",
+                "backend"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

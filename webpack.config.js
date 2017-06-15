@@ -48,6 +48,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version),
       DEBUG: process.env.NODE_ENV !== 'production'
     }),
     new CopyWebpackPlugin([

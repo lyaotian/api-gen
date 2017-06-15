@@ -6,3 +6,4 @@ code_output/
 .idea
 config.json
 api-docs.json
+out/

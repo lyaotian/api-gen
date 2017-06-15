@@ -53,13 +53,17 @@ export default class RestCode {
 
         for (let path in api_data.paths) {
             const data = this.createOutput(path)
+            if (data == null) {
+                continue
+            }
+
             //读取实际项目里面手写的代码
             let customCodes = new Map<string, string>()
             let outFileName = `${data.name}.ts`
             for (let inFileName of exists) {
                 if (outFileName == inFileName) {
                     let content = fs.readFileSync(`${projectDir}/${inFileName}`, 'utf-8')
-                    this.addExistsCode(content, data, customCodes)
+                    this.addExistsCode(content, customCodes)
                     break
                 }
             }
@@ -75,45 +79,52 @@ export default class RestCode {
         }
     }
 
-    private createOutput(path: string): OutputData {
-        const data = new OutputData()
-        data.path = path
+    private createOutput(path: string): OutputData|null {
+        let data: OutputData|null = null
+        let isGET = false
         let value: any = this.api_data.paths[path]
-        let api
+        let api = null
         if (api = value['post']) {
-            data.isGET = false
+            isGET = false
         } else if (api = value['get']) {
-            data.isGET = true
+            isGET = true
         }
         if (api) {
-            data.name = this.toSerivceName(path)
-            data.doc = api.summary
-            data.parameters = api.parameters.map((item: Parameter) => {
-                if (item.type === 'file') {
-                    data.isUpload = true
-                    item.type = 'string'
+            let response = api.responses["200"].schema;
+            if (response){
+                data = new OutputData()
+                data.isGET = isGET
+                data.path = path
+                data.name = this.toSerivceName(path)
+                data.doc = api.summary
+                data.parameters = api.parameters.map((item: Parameter) => {
+                    if (item.type === 'file') {
+                        if (data) {
+                            data.isUpload = true
+                        }
+                        item.type = 'string'
+                    }
+                    return item
+                })
+                data.isList = response.items
+                if (data.isList) {
+                    data.dataType = Utils.getRefType(response.items.$ref)
+                } else {
+                    data.dataType = Utils.getRefType(response.$ref)
                 }
-                return item
-            })
-            let ok = api.responses[`200`]
-            data.isList = ok && ok.schema && ok.schema.items
-            if (data.isList) {
-                data.dataType = Utils.getRefType(ok.schema.items.$ref)
-            } else {
-                data.dataType = Utils.getRefType(ok.schema.$ref)
-            }
-            //引用类型
-            let refType = data.dataType
-            if (!data.refs.some(item => item === refType)) {
-                if (refType !== 'BaseModel') {
-                    data.refs.push(refType)
+                //引用类型
+                let refType = data.dataType
+                if (!data.refs.some(item => item === refType)) {
+                    if (refType !== 'BaseModel') {
+                        data.refs.push(refType)
+                    }
                 }
             }
         }
         return data
     }
 
-    private addExistsCode(fileContent: string, data: OutputData, customCodes: Map<string, string>): boolean {
+    private addExistsCode(fileContent: string, customCodes: Map<string, string>): boolean {
         let added = false
         let lines = fileContent.split('\n')
         let codeTag: string = ''

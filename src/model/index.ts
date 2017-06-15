@@ -145,7 +145,7 @@ export class GenModel {
                     }
                     let newP = Object.assign(
                         {}, 
-                        p, 
+                        p,
                         {
                             type: this.toJavaPropertyType(p),
                             nullable: this.isJavaPropertyNullable(p)
@@ -207,13 +207,24 @@ export class GenModel {
             _m.gencrics = [];
             _m.properties = _m.properties.map(
                 (p: Property) => {
-                    if (p.refType || p.genericType){
-                        if (p.refType != 'BaseModel'){
-                            if (!_m.refs.some((item: string) => item == p.refType)) {
-                                _m.refs.push(p.refType);
-                            }
+                    let pushIfNotExists = (type: any) => {
+                        if (!_m.refs.some((item: string) => item == type)) {
+                            _m.refs.push(type)
                         }
                     }
+
+                    if (p.refType || p.genericType){
+                        if (p.refType != 'BaseModel'){
+                            pushIfNotExists(p.refType)
+                        }
+                    }
+
+                    if (m.extends) {
+                        if (m.extends != 'BaseModel'){
+                            pushIfNotExists(m.extends)
+                        }
+                    }
+
                     return Object.assign({}, p, {typeValue: this.toTsPropertyTypeValue(p)});
                 }
             );

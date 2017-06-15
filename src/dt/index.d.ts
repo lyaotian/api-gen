@@ -1,4 +1,5 @@
 declare var DEBUG: boolean
+declare var VERSION: string
 declare interface Config {
     url: string
     packageName: string

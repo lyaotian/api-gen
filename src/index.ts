@@ -3,7 +3,7 @@ import * as fs from 'fs-extra'
 import Main from "./Main";
 
 program
-  .version('0.0.1')
+  .version(VERSION || '0.0.0')
   .option('-c, --config [path]', 'Your custom config file path, default: ./config.json')
   .option('-o, --output [java/objc/ts/backend]', 'Generate java/objc/ts/backend code, default: java')
   .action((cmd, env) => {

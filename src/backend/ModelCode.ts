@@ -21,7 +21,6 @@ export default class ModelCode {
 
     constructor(config: Config, api_data: any) {
         this.config = config
-
         let template = fs.readFileSync(root + '/template/backend/model.mustache', 'utf8')
         for (let name in api_data.definitions) {
             if (name === 'BaseModel') {

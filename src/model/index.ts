@@ -209,7 +209,9 @@ export class GenModel {
                 (p: Property) => {
                     let pushIfNotExists = (type: any) => {
                         if (!_m.refs.some((item: string) => item == type)) {
-                            _m.refs.push(type)
+                            if (type !== m.name) {
+                                _m.refs.push(type)
+                            }
                         }
                     }
 

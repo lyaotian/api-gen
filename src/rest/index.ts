@@ -131,20 +131,36 @@ const itemTs = `
  * {{{doc}}}
  */
 export function {{name}}(
+    {{#isUpload}}
+    parameters: FormData,
+    {{/isUpload}}
+    {{^isUpload}}
     parameters: {
         {{#parameters}}
         {{name}}: {{parameterType}},
         {{/parameters}}
     },
+    {{/isUpload}}
     success: (result: Request{{#isList}}List{{/isList}}Result<{{responseType}}>) => void,
-    failure: (error: RequestError) => void
+    failure: (error: RequestError) => void,
+    {{#isUpload}}
+    progress?: (percent: number) => void,
+    {{/isUpload}}
 ) {
+    {{#isUpload}}
+    requestUpload<{{responseType}}>(
+    {{/isUpload}}
+    {{^isUpload}}
     request{{#isList}}List{{/isList}}<{{responseType}}>(
+    {{/isUpload}}
         '{{method}}',
         '{{{path}}}',
-        {...parameters},
+        parameters,
         success,
-        failure
+        failure,
+        {{#isUpload}}
+        progress
+        {{/isUpload}}
     )
 }
 {{/apis}}
@@ -239,7 +255,7 @@ export class RestModel {
         let getParamType = (paramItem: APIParameter) => {
             let inputType = paramItem.type;
             if (inputType == 'file'){
-                return 'string';
+                return 'FormData';
             }
             return inputType;
         }

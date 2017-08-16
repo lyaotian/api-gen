@@ -20,7 +20,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "backend"
+                "ts"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

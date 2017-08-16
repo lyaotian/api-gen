@@ -23,7 +23,8 @@ export default class Backend {
         let apiDir = this.config.apiDir.backend
         let copyFrom = root + '/code_output/backend/model'
         let copyTo = apiDir + '/model'
-        fs.emptyDirSync(copyFrom)
+
+        fs.ensureDirSync(copyTo)
         fs.emptyDirSync(copyTo)
         new ModelCode(this.config, this.data)
         this.copy(copyFrom, copyTo)
@@ -31,8 +32,8 @@ export default class Backend {
         apiDir = this.config.apiDir.backend
         copyFrom = root + '/code_output/backend/rest'
         copyTo = apiDir + '/rest'
-        fs.emptyDirSync(copyFrom)
-        fs.emptyDirSync(copyTo)
+
+        fs.ensureDirSync(copyTo)
         new RestCode(this.config, this.data)
         this.copy(copyFrom, copyTo)
     }

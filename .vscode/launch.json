@@ -32,7 +32,7 @@
             "name": "TSC",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/index.js",
+            "program": "${workspaceRoot}/bin/bundle.js",
             "cwd": "${workspaceRoot}/bin",
             "env": {
                 "NODE_ENV": "development"

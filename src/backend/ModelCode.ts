@@ -45,7 +45,9 @@ export default class ModelCode {
                 data.properties.push({...p, ...{typeValue: this.toTsPropertyTypeValue(p)}})
                 //引用类型
                 if (p.refType && !data.refs.some(item => item === p.refType)) {
-                    data.refs.push(p.refType)
+                    if (p.refType !== data.name) {
+                        data.refs.push(p.refType)
+                    }
                 }
             }
 

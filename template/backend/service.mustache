@@ -13,16 +13,18 @@ import {{{.}}} = require('../model/{{{.}}}')
  * {{{doc}}}
  */
 class {{name}} {
-    
+    app: any
+
     get path(): string {
         return '{{{path}}}'
     }
-    
+
     get isUpload(): boolean {
         return {{{isUpload}}}
     }
 
     setup(app: any, path: string) {
+        this.app = app;
         console.log('setup service: /' + path)
     }
 
@@ -52,7 +54,7 @@ class {{name}} {
 
 
         let callback = (
-            resolve: (data: Request{{#isList}}List{{/isList}}Result<{{dataType}}>) => void, 
+            resolve: (data: Request{{#isList}}List{{/isList}}Result<{{dataType}}>) => void,
             reject: (error: Error) => void) => {
 
             let data = new {{dataType}}()

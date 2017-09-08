@@ -129,6 +129,11 @@ const itemTs = `
 {{#apis}}
 /**
  * {{{doc}}}
+ *
+   {{#parameters}}
+ * @param {{name}}{{^isRequired}}(可选)    {{/isRequired}} {{{doc}}}
+   {{/parameters}}
+ * @return Call
  */
 export function {{name}}(
     {{#isUpload}}

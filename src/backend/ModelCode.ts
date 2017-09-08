@@ -28,6 +28,7 @@ export default class ModelCode {
             }
             let value: any = api_data.definitions[name]
             let data = new OutputData()
+            data.doc = value.description
             data.name = name
             for (let pKey in value.properties) {
                 let pValue = value.properties[pKey]
@@ -42,7 +43,7 @@ export default class ModelCode {
                 }
                 p.genericType = p.isArray ? p.refType : null
                 p.type = pValue.type || p.refType || p.genericType
-                data.properties.push({...p, ...{typeValue: this.toTsPropertyTypeValue(p)}})
+                data.properties.push(Object.assign({}, p, {typeValue: this.toTsPropertyTypeValue(p)}))
                 //引用类型
                 if (p.refType && !data.refs.some(item => item === p.refType)) {
                     if (p.refType !== data.name) {

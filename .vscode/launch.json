@@ -44,7 +44,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "backend"
+                "objc"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

@@ -98,7 +98,7 @@ const itemObjcM = `
                         filePaths:{{#isUpload}}filePath{{/isUpload}}{{^isUpload}}nil{{/isUpload}}
                     jsonParameter:NO
                            result:[KWMRequest{{#isList}}List{{/isList}}Result class]
-                            model:[KWM{{responseType}} class]
+                            model:[{{objcPrefix}}{{responseType}} class]
                           success:success
                           failure:failure];
 }

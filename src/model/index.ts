@@ -57,7 +57,7 @@ export class GenModel {
     toJavaPropertyType(p = property){
         let inputType = p.type;
         if (inputType == 'array'){
-            return 'ArrayList<' + p.genericType + '>';
+            return 'ArrayList<' + (p.genericType == 'string' ? 'String' : p.genericType) + '>';
         }else if (inputType == 'number'){
             return Utils.getNumberType(p.format, false);
         }else if (inputType == 'string'){
@@ -111,6 +111,7 @@ export class GenModel {
                         let isArray = pItem.type == 'array';
                         if (isArray){
                             refType = Utils.getRefType(pItem.items.$ref);
+                            console.log(`${m.description} refTyp=${refType} ${pItem.items.$ref}`)
                         }
 
                         return {
@@ -139,7 +140,7 @@ export class GenModel {
             _m.properties = _m.properties.map(
                 (p: Property) => {
                     if (p.refType || p.genericType){
-                        if (p.refType != 'BaseModel'){
+                        if (p.refType != 'BaseModel' && p.refType != 'string'){
                             _m.refs.push(p.refType);
                         }
                     }
@@ -216,13 +217,13 @@ export class GenModel {
                     }
 
                     if (p.refType || p.genericType){
-                        if (p.refType != 'BaseModel'){
+                        if (p.refType != 'BaseModel' && p.refType != 'string'){
                             pushIfNotExists(p.refType)
                         }
                     }
 
                     if (m.extends) {
-                        if (m.extends != 'BaseModel'){
+                        if (m.extends != 'BaseModel' && p.refType != 'string'){
                             pushIfNotExists(m.extends)
                         }
                     }

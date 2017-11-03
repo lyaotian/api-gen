@@ -42,6 +42,9 @@ export class Utils {
         if (lIndex > 0){
             return refType.substring(lIndex + 1);
         }
+        if (refType.toLowerCase() == 'string') {
+            return 'string'
+        }
         return "BaseModel";
     }
 

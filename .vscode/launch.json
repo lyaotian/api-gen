@@ -44,7 +44,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "objc"
+                "java"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

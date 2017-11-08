@@ -81,10 +81,10 @@ export class GenModel {
         if (inputType == 'array'){
             return 'new Array<' + p.genericType + '>()';
         }else if (
-        inputType == 'long' || 
-        inputType == 'number' || 
-        inputType == 'int' || 
-        inputType == 'double' || 
+        inputType == 'long' ||
+        inputType == 'number' ||
+        inputType == 'int' ||
+        inputType == 'double' ||
         inputType == 'float'
         ) {
             return 0
@@ -93,7 +93,7 @@ export class GenModel {
         }
         return "new " + inputType + "()";
     }
-    
+
     getModels(api_data: any) {
         let models = Object.keys(api_data.definitions);
         return models.map((key) => {
@@ -111,7 +111,6 @@ export class GenModel {
                         let isArray = pItem.type == 'array';
                         if (isArray){
                             refType = Utils.getRefType(pItem.items.$ref);
-                            console.log(`${m.description} refTyp=${refType} ${pItem.items.$ref}`)
                         }
 
                         return {
@@ -145,7 +144,7 @@ export class GenModel {
                         }
                     }
                     let newP = Object.assign(
-                        {}, 
+                        {},
                         p,
                         {
                             type: this.toJavaPropertyType(p),

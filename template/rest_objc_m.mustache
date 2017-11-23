@@ -1,12 +1,12 @@
 //
-//  {{objcPrefix}}APIManager.m
+//  KWMAPIManager.m
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!!DO NOT EDIT!!! Auto generated code !!!DO NOT EDIT!!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //  Copyright (c) 2015 kollway. All rights reserved.
 //
 
-#import "{{objcPrefix}}APIManager.h"
+#import "KWMAPIManager.h"
 #import "KWMRequestResult.h"
 #import "KWMRequestListResult.h"
 #import "{{targetName}}-Swift.h"
@@ -15,10 +15,10 @@
 #import "{{objcPrefix}}{{.}}.h"
 {{/refs}}
 
-@implementation {{objcPrefix}}APIManager
+@implementation KWMAPIManager
 
-+ ({{objcPrefix}}APIManager *)sharedManager {
-    static {{objcPrefix}}APIManager *_sharedManager = nil;
++ (KWMAPIManager *)sharedManager {
+    static KWMAPIManager *_sharedManager = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _sharedManager = [[self alloc] init];

@@ -14,17 +14,19 @@ import {{{.}}} = require('../model/{{{.}}}')
  */
 class {{name}} {
     app: any
+    sequelize: any
 
     get path(): string {
         return '{{{path}}}'
     }
-
+    
     get isUpload(): boolean {
         return {{{isUpload}}}
     }
 
     setup(app: any, path: string) {
         this.app = app;
+        this.sequelize = this.app.get('sequelizeClient')
         console.log('setup service: /' + path)
     }
 
@@ -41,8 +43,7 @@ class {{name}} {
     }
     {{/isGET}}
 
-    doWork(params: any): Promise<any> {
-
+    async doWork(params: any): Promise<any> {
         {{#isList}}
         let page = params.page
         let page_size = params.page_size || RequestListResult.PAGE_SIZE
@@ -52,26 +53,23 @@ class {{name}} {
         let {{name}}: {{type}} = params.{{name}}
         {{/parameters}}
 
-
-        let callback = (
-            resolve: (data: Request{{#isList}}List{{/isList}}Result<{{dataType}}>) => void,
-            reject: (error: Error) => void) => {
-
-            let data = new {{dataType}}()
-            let result = ResultWrapper.wrap{{#isList}}List{{/isList}}({{#isList}}[data]{{/isList}}{{^isList}}data{{/isList}})
-            {{#isList}}
-            result.page = page
-            result.page_size = page_size
-            result.total_count = 3 * page_size + page_size/2
-            {{/isList}}
-            result.message = '假数据'
-
+        let data = new {{dataType}}()
+        let result = ResultWrapper.wrap{{#isList}}List{{/isList}}({{#isList}}[data]{{/isList}}{{^isList}}data{{/isList}})
+        {{#isList}}
+        result.page = page
+        result.page_size = page_size
+        result.total_count = 3 * page_size + page_size/2
+        {{/isList}}
+        result.message = '假数据'
+        try {
 //code2
 {{{code2}}}
 //code2
-            resolve(result)
+        }catch (e) {
+            console.error(`${this.path}`)
+            console.error(e)
         }
-        return new Promise(callback)
+        return result
     }
 }
 

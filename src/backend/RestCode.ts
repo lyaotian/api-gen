@@ -14,7 +14,8 @@ class Parameter {
     name = ''
     required = false
     type = ''
-    defaultValue: any = "\"\""
+    format: string | undefined
+    valueCode: any = "\"\""
 }
 class OutputData {
     path = ''
@@ -105,15 +106,24 @@ export default class RestCode {
                                 data.isUpload = true
                             }
                             item.type = 'string'
-                            item.defaultValue = "\"\""
+                            item.valueCode = `params.${item.name} || ""`
                             break
                         }
                         case 'string': {
-                            item.defaultValue = "\"\""
+                            item.valueCode = `params.${item.name} || ""`
                             break
                         }
                         case 'number': {
-                            item.defaultValue = 0
+                            const format = item.format
+                            if (format == 'int32' || format == 'int' || format == 'integer' || 'int64' || format == 'long'){
+                                let l = `params.${item.name}`
+                                item.valueCode = `parseInt('' + ${l}, 10) || 0`
+                            } else if(format == 'float' || format == 'double'){
+                                let l = `params.${item.name}`
+                                item.valueCode = `parseFloat('' + ${l}, 10) || 0`
+                            } else {
+                                item.valueCode = `""`
+                            }
                             break
                         }
                         default: {

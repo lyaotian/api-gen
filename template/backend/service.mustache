@@ -53,7 +53,7 @@ class {{name}} {
         {{/isList}}
         {{#parameters}}
         /**{{{description}}}*/
-        let {{name}}: {{type}} = params.{{name}} || {{{defaultValue}}}
+        let {{name}}: {{type}} = {{{valueCode}}}
         {{/parameters}}
 
         let data = new {{dataType}}()

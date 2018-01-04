@@ -110,7 +110,7 @@ export class GenModel {
                         let refType = pItem.$ref && Utils.getRefType(pItem.$ref);
                         let isArray = pItem.type == 'array';
                         if (isArray){
-                            refType = Utils.getRefType(pItem.items.$ref);
+                            refType = pItem.items.type || Utils.getRefType(pItem.items.$ref);
                         }
 
                         return {

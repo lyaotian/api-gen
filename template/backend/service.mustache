@@ -2,6 +2,9 @@ import ResultWrapper = require('../ResultWrapper')
 import RequestResult = require("../RequestResult")
 import RequestListResult = require("../RequestListResult")
 import BaseModel = require('../BaseModel')
+import Sequelize = require('sequelize')
+import dao = require('../../database/dao/index')
+import utils = require('../../utils/index')
 {{#refs}}
 import {{{.}}} = require('../model/{{{.}}}')
 {{/refs}}
@@ -13,18 +16,18 @@ import {{{.}}} = require('../model/{{{.}}}')
  * {{{doc}}}
  */
 class {{name}} {
-    app: any
+    app: FeathersApp
     sequelize: any
 
     get path(): string {
         return '{{{path}}}'
     }
-    
+
     get isUpload(): boolean {
         return {{{isUpload}}}
     }
 
-    setup(app: any, path: string) {
+    setup(app: FeathersApp, path: string) {
         this.app = app;
         this.sequelize = this.app.get('sequelizeClient')
         console.log('setup service: /' + path)
@@ -32,25 +35,25 @@ class {{name}} {
 
     {{#isGET}}
     //GET
-    find(params: any, callback: Function) {
-        return this.doWork(params.query)
+    find(requestInfo: FeathersRequestInfo) {
+        return this.doWork(requestInfo.query, requestInfo)
     }
     {{/isGET}}
     {{^isGET}}
     //POST
-    create(data: any, params: any) {
-        return this.doWork(data)
+    create(data: any, requestInfo: FeathersRequestInfo) {
+        return this.doWork(data, requestInfo)
     }
     {{/isGET}}
 
-    async doWork(params: any): Promise<any> {
+    async doWork(params: any, requestInfo: FeathersRequestInfo): Promise<any> {
         {{#isList}}
-        let page = params.page
-        let page_size = params.page_size || RequestListResult.PAGE_SIZE
+        let page = parseInt(params.page || 1)
+        let page_size = parseInt(params.page_size || RequestListResult.PAGE_SIZE, 10)
         {{/isList}}
         {{#parameters}}
         /**{{{description}}}*/
-        let {{name}}: {{type}} = params.{{name}}
+        let {{name}}: {{type}} = params.{{name}} || {{{defaultValue}}}
         {{/parameters}}
 
         let data = new {{dataType}}()
@@ -58,17 +61,13 @@ class {{name}} {
         {{#isList}}
         result.page = page
         result.page_size = page_size
-        result.total_count = 3 * page_size + page_size/2
         {{/isList}}
         result.message = '假数据'
-        try {
+
 //code2
 {{{code2}}}
 //code2
-        }catch (e) {
-            console.error(`${this.path}`)
-            console.error(e)
-        }
+
         return result
     }
 }

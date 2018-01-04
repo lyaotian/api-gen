@@ -14,12 +14,13 @@ class Parameter {
     name = ''
     required = false
     type = ''
+    defaultValue: any = "\"\""
 }
 class OutputData {
     path = ''
     doc = ''
     name = ''
-    parameters = []
+    parameters: Parameter[] = []
     isGET = false
     isList = false
     isUpload = false
@@ -98,12 +99,29 @@ export default class RestCode {
                 data.name = this.toSerivceName(path)
                 data.doc = api.summary
                 data.parameters = api.parameters.map((item: Parameter) => {
-                    if (item.type === 'file') {
-                        if (data) {
-                            data.isUpload = true
+                    switch(item.type) {
+                        case 'file': {
+                            if (data) {
+                                data.isUpload = true
+                            }
+                            item.type = 'string'
+                            item.defaultValue = "\"\""
+                            break
                         }
-                        item.type = 'string'
+                        case 'string': {
+                            item.defaultValue = "\"\""
+                            break
+                        }
+                        case 'number': {
+                            item.defaultValue = 0
+                            break
+                        }
+                        default: {
+                            console.warn('unknow type ' + item.type)
+                            break
+                        }
                     }
+
                     return item
                 })
                 data.isList = response.items

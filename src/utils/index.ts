@@ -17,20 +17,60 @@ export class Utils {
     //     }
     // }
 
-    static getNumberType(format: string = '', isObjc = false): string {
+    static getNumberType(format: string = '', language: Languages): string {
         if (!format){
             console.warn('missing number format!!');
             return '';
         }
 
         if (format == 'int32' || format == 'int' || format == 'integer'){
-            return isObjc ? 'NSInteger' : 'int';
+            switch (language) {
+                case "objc": {
+                    return 'NSInteger'
+                }
+                case "swift": {
+                    return 'Int'
+                }
+                default:{
+                    return 'int'
+                }
+            }
         }else if(format == 'int64' || format == 'long'){
-            return isObjc ? 'NSInteger' : 'long';
+            switch (language) {
+                case "objc": {
+                    return 'NSInteger'
+                }
+                case "swift": {
+                    return 'Int64'
+                }
+                default:{
+                    return 'long'
+                }
+            }
         }else if(format == 'float'){
-            return isObjc ? 'CGFloat' : 'float';
+            switch (language) {
+                case "objc": {
+                    return 'CGFloat'
+                }
+                case "swift": {
+                    return 'Float'
+                }
+                default:{
+                    return 'float'
+                }
+            }
         }else if(format == 'double'){
-            return isObjc ? 'CGFloat' : 'double';
+            switch (language) {
+                case "objc": {
+                    return 'CGFloat'
+                }
+                case "swift": {
+                    return 'Double'
+                }
+                default:{
+                    return 'double'
+                }
+            }
         }else {
             console.warn('unsupport number format: ' + format);
             return format;

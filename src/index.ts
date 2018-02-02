@@ -5,7 +5,7 @@ import Main from "./Main";
 program
   .version(VERSION || '0.0.0')
   .option('-c, --config [path]', 'Your custom config file path, default: ./config.json')
-  .option('-o, --output [java/objc/ts/backend]', 'Generate java/objc/ts/backend code, default: java')
+  .option('-o, --output [java/objc/swift/ts/backend]', 'Generate java/objc/ts/backend code, default: java')
   .action((cmd, env) => {
 
   })
@@ -26,6 +26,10 @@ switch (output) {
   }
   case 'objc': {
     main.objc()
+    break
+  }
+  case 'swift': {
+    main.swift()
     break
   }
   case 'ts': {

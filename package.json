@@ -1,6 +1,6 @@
 {
   "name": "auto-swagger-api",
-  "version": "2.0.11",
+  "version": "3.0.0",
   "description": "",
   "scripts": {
     "prebuild": "rm -rf ./bin",

@@ -1,0 +1,22 @@
+// 代码自动生成，不许修改
+// Auto generated code DO NOT EDIT !
+
+import Alamofire
+
+class ApiManager: ApiBase {
+
+    public static let PAGE_SIZE = {{pageSize}}
+    public static let BASE_URL = "{{{baseUrl}}}"
+    public static let DEMO_URL = "{{{demoUrl}}}"
+
+    private static let instance = ApiManager()
+    
+    private override init() {
+        super.init()
+    }
+    
+    static func share() -> ApiManager {
+        return instance
+    }
+    {{{code}}}
+}

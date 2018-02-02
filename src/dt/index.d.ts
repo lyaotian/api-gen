@@ -14,6 +14,9 @@ declare interface Config {
 declare interface OutputDir {
     java: string
     objc: string
+    swift: string
     ts: string
     backend: string
 }
+
+type Languages = "java"|"objc"|"swift"|"ts"|"backend"

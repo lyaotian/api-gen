@@ -29,7 +29,7 @@
             ]
         },
         {
-            "name": "TSC",
+            "name": "run",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/bin/bundle.js",
@@ -44,7 +44,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "java"
+                "swift"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

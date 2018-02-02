@@ -6,9 +6,6 @@ import Backend from "./backend/index"
 const path = require('path')
 const root = '.'
 const outDir = './code_output'
-const modelDirJava = outDir + '/java/model'
-const modelDirObjc = outDir + '/objc/model'
-const modelDirTs = outDir + '/ts/model'
 const fs = require('fs-extra')
 export default class Main {
     config: Config
@@ -18,7 +15,7 @@ export default class Main {
     }
 
     public java() {
-        let doWork = () => this.copyCodes(true, false, false)
+        let doWork = () => this.copyCodes("java")
 
         this.downloadApiDocs()
         .then(doWork)
@@ -26,7 +23,15 @@ export default class Main {
     }
 
     public objc() {
-        let doWork = () => this.copyCodes(false, true, false)
+        let doWork = () => this.copyCodes("objc")
+
+        this.downloadApiDocs()
+        .then(doWork)
+        .catch(doWork)
+    }
+
+    public swift() {
+        let doWork = () => this.copyCodes("swift")
 
         this.downloadApiDocs()
         .then(doWork)
@@ -34,7 +39,7 @@ export default class Main {
     }
 
     public ts() {
-        let doWork = () => this.copyCodes(false, false, true)
+        let doWork = () => this.copyCodes("ts")
 
         this.downloadApiDocs()
         .then(doWork)
@@ -73,68 +78,102 @@ export default class Main {
      * @param isCopyObjc 
      * @param isCopyTs 
      */
-    private copyCodes(isCopyJava = false, isCopyObjc = false, isCopyTs = false) {
-        //创建目录
+    private copyCodes(language: Languages) {
+        // 删除现有的目录
         fs.removeSync(outDir)
-        fs.ensureDirSync(modelDirJava)
-        fs.ensureDirSync(modelDirObjc)
-        fs.ensureDirSync(modelDirTs)
-        //生成代码
-        new GenModel(this.config).launch()
-        new RestModel(this.config).launch()
 
+        // 复制到目标目录
         let apiDir = ''
         let copyFrom = ''
         let copyTo = ''
+        switch (language) {
+            case "java": {
+                const modelDirJava = outDir + '/java/model'
+                fs.ensureDirSync(modelDirJava)
+                new GenModel(this.config).launch(language)
+                new RestModel(this.config).launch(language)
 
-        //Java
-        if (isCopyJava) {
-            apiDir = this.config.apiDir.java
-            fs.emptyDirSync(apiDir + '/model')
-            copyFrom = modelDirJava
-            copyTo = apiDir + '/model'
-            fs.copySync(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
+                apiDir = this.config.apiDir.java
+                fs.emptyDirSync(apiDir + '/model')
+                copyFrom = modelDirJava
+                copyTo = apiDir + '/model'
+                fs.copySync(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                copyFrom = outDir + '/java/REST.java'
+                copyTo = apiDir + '/REST.java'
+                fs.copy(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+                break
+            }
+            case "objc": {
+                const modelDirObjc = outDir + '/objc/model'
+                fs.ensureDirSync(modelDirObjc)
+                new GenModel(this.config).launch(language)
+                new RestModel(this.config).launch(language)
 
-            copyFrom = outDir + '/java/REST.java'
-            copyTo = apiDir + '/REST.java'
-            fs.copy(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
-        }
+                apiDir = this.config.apiDir.objc
+                fs.emptyDirSync(apiDir + '/model')
+                copyFrom = modelDirObjc
+                copyTo = apiDir + '/model'
+                fs.copySync(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                copyFrom = outDir + '/objc/KWMAPIManager.h'
+                copyTo = apiDir + '/KWMAPIManager.h'
+                fs.copy(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                copyFrom = outDir + '/objc/KWMAPIManager.m'
+                copyTo = apiDir + '/KWMAPIManager.m'
+                fs.copy(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+                break
+            }
+            case "swift": {
+                const modelDirSwift = outDir + '/swift/model'
+                fs.ensureDirSync(modelDirSwift)
+                new GenModel(this.config).launch(language)
+                new RestModel(this.config).launch(language)
 
-        //Objc
-        if (isCopyObjc) {
-            apiDir = this.config.apiDir.objc
-            fs.emptyDirSync(apiDir + '/model')
-            copyFrom = modelDirObjc
-            copyTo = apiDir + '/model'
-            fs.copySync(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
+                apiDir = this.config.apiDir.swift
+                fs.emptyDirSync(apiDir + '/model')
+                copyFrom = modelDirSwift
+                copyTo = apiDir + '/model'
+                fs.copySync(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                copyFrom = outDir + '/swift/ApiManager.swift'
+                copyTo = apiDir + '/ApiManager.swift'
+                fs.copy(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+                break
+            }
+            case "ts": {
+                const modelDirTs = outDir + '/ts/model'
+                fs.ensureDirSync(modelDirTs)
+                new GenModel(this.config).launch(language)
+                new RestModel(this.config).launch(language)
 
-            copyFrom = outDir + '/objc/KWMAPIManager.h'
-            copyTo = apiDir + '/KWMAPIManager.h'
-            fs.copy(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
-
-            copyFrom = outDir + '/objc/KWMAPIManager.m'
-            copyTo = apiDir + '/KWMAPIManager.m'
-            fs.copy(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
-        }
-
-        //TypeScript
-        if (isCopyTs) {
-            apiDir = this.config.apiDir.ts
-            fs.emptyDirSync(apiDir + '/model')
-            copyFrom = modelDirTs
-            copyTo = apiDir + '/model'
-            fs.copySync(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
-
-            copyFrom = outDir + '/ts/index.ts'
-            copyTo = apiDir + '/index.ts'
-            fs.copy(copyFrom, copyTo)
-            console.log(copyFrom + ' => ' + copyTo)
+                apiDir = this.config.apiDir.ts
+                fs.emptyDirSync(apiDir + '/model')
+                copyFrom = modelDirTs
+                copyTo = apiDir + '/model'
+                fs.copySync(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                copyFrom = outDir + '/ts/index.ts'
+                copyTo = apiDir + '/index.ts'
+                fs.copy(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+                break
+            }
+            case "backend": {
+                break
+            }
+            default:{
+                break
+            }
         }
     }
 }

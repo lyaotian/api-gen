@@ -110,6 +110,9 @@ const itemJava = `
     /**
      * {{{doc}}}
      *
+     {{#isUpload}}
+     * 注意: 上传文件参数的map的key string应该这样构建: xxx; filename=\\"xxx\\" (xxx为参数名)
+     {{/isUpload}}
        {{#parameters}}
      * @param {{name}}{{^isRequired}}(可选)    {{/isRequired}} {{{doc}}}
        {{/parameters}}
@@ -173,7 +176,7 @@ export function {{name}}(
 
 /**生成REST API代码 */
 export class RestModel {
-
+    language :Languages = "java"
     config: any
 
     constructor(config: Config){
@@ -245,12 +248,12 @@ export class RestModel {
         return result;
     }
 
-    getRefList(apis: any[], isJava = true) {
+    getRefList(apis: any[], language: Languages) {
         let allRef = apis.map(
         (api) => {
             return api.responseType
         });
-        if (isJava){
+        if (language == "java"){
             allRef = allRef.filter((type) => {return type != 'BaseModel'});
         }
         return Array.from(new Set(allRef));
@@ -280,7 +283,7 @@ export class RestModel {
         let value = mustache.render(itemTs, config);
         let otherCode = fs.readFileSync(root + '/template/rest_ts.mustache', 'utf8');
         value = mustache.render(otherCode, Object.assign({
-            refs: this.getRefList(this.config.apis, true),
+            refs: this.getRefList(this.config.apis, this.language),
             code: value
         }, this.config));
         fs.writeFileSync('./' + dir + '/index.ts', value);
@@ -302,7 +305,7 @@ export class RestModel {
         let getParamType = (paramItem: APIParameter) => {
             let inputType = paramItem.type;
             if(inputType == 'number'){
-                return Utils.getNumberType(paramItem.format, false);
+                return Utils.getNumberType(paramItem.format, "java");
             }else if (inputType == 'string'){
                 return 'String';
             }else if (inputType == 'file'){
@@ -335,14 +338,14 @@ export class RestModel {
         let value = mustache.render(itemJava, javaConfig);
         let otherCode = fs.readFileSync(root + '/template/rest_java.mustache', 'utf8');
         value = mustache.render(otherCode, Object.assign({
-            refs: this.getRefList(this.config.apis, true),
+            refs: this.getRefList(this.config.apis, this.language),
             code: value
         }, this.config));
         fs.writeFileSync('./' + dir + '/REST.java', value);
     }
 
     genObjcCode(dir: string){
-        let otherConfig = Object.assign({refs: this.getRefList(this.config.apis, false)}, this.config);
+        let otherConfig = Object.assign({refs: this.getRefList(this.config.apis, this.language)}, this.config);
 
         let value = mustache.render(itemObjcH, this.config);
         let codeHtmp = fs.readFileSync(root + '/template/rest_objc_h.mustache', 'utf8');
@@ -355,10 +358,130 @@ export class RestModel {
         fs.writeFileSync('./' + dir + '/KWMAPIManager.m', codeM);
     }
 
-    launch(){
-        this.genJavaCode('code_output/java');
-        this.genObjcCode('code_output/objc');
-        this.genTsCode('code_output/ts');
+    genSwiftCode(dir: string) {
+        let getParamType = (paramItem: APIParameter) => {
+            let inputType = paramItem.type;
+            if (inputType == 'file'){
+                return 'FormData';
+            }
+            return inputType;
+        }
+        let config = Object.assign({}, this.config);
+        config.apis = config.apis.map((apiItem: APIItem) => {
+            let result = Object.assign(apiItem, {
+                parameters: apiItem.parameters.map(
+                    (paramItem: APIParameter, i: number) => {
+                        return Object.assign(paramItem, {
+                            parameterType: getParamType(paramItem),
+                        })
+                    }),
+                method: apiItem.method.toLowerCase(),
+            });
+            return result;
+        });
+
+        const itemTemplate = `
+    {{#apis}}
+    /**
+    * {{{doc}}}
+    *
+    {{#parameters}}
+    * @param {{name}}{{^isRequired}}(可选)    {{/isRequired}} {{{doc}}}
+    {{/parameters}}
+    {{^isUpload}}
+    * @return DataRequest
+    {{/isUpload}}
+    */
+    {{^isUpload}}
+    @discardableResult
+    {{/isUpload}}
+    public func {{name}}(
+        parameters: Parameters,
+        {{#isUpload}}
+        fileParameters: [String: URL],
+        {{/isUpload}}
+        success: @escaping (Request{{#isList}}List{{/isList}}Result<{{responseType}}>) -> Void,
+        failure: @escaping (Error) -> Void ){{^isUpload}} -> DataRequest{{/isUpload}} {
+
+        let url = "\\(baseUrl){{{path}}}"
+        {{#parameters}}
+        {{#isRequired}}
+        assert(parameters["{{name}}"] != nil{{#isUpload}} || fileParameters["{{name}}"] != nil{{/isUpload}}, "缺少参数: {{name}}")
+        {{/isRequired}}
+        {{/parameters}}
+
+        {{#isUpload}}
+        upload(url,
+            method: .{{method}},
+            parameters: parameters,
+            fileParameters: fileParameters,
+            encodingCompletion: { (result: SessionManager.MultipartFormDataEncodingResult) in
+                switch result {
+                case .success(let uploadRequest, _, _):
+                    uploadRequest.responseObject(completionHandler: { (response: DataResponse<Request{{#isList}}List{{/isList}}Result<{{responseType}}>>) in
+                        switch response.result {
+                        case .success(let result):
+                            success(result)
+                        case .failure(let error):
+                            failure(error)
+                        }
+                    })
+                case .failure(let error):
+                    failure(error)
+                }
+        })
+        {{/isUpload}}
+        {{^isUpload}}
+        let req = request(url, method: .{{method}}, parameters: parameters)
+        req.responseObject { (response: DataResponse<Request{{#isList}}List{{/isList}}Result<{{responseType}}>>) in
+            switch response.result {
+            case .success(let result):
+                success(result)
+            case .failure(let error):
+                failure(error)
+            }
+        }
+        return req
+        {{/isUpload}}
+    }
+    {{/apis}}
+        `
+        let value = mustache.render(itemTemplate, config);
+        let otherCode = fs.readFileSync(root + '/template/rest_swift.mustache', 'utf8');
+        value = mustache.render(otherCode, Object.assign({
+            refs: this.getRefList(this.config.apis, this.language),
+            code: value
+        }, this.config));
+        fs.writeFileSync('./' + dir + '/ApiManager.swift', value);
+    }
+
+    launch(language: Languages){
+        this.language = language
+
+        switch (language) {
+            case "java": {
+                this.genJavaCode('code_output/java')
+                break
+            }
+            case "objc": {
+                this.genObjcCode('code_output/objc')
+                break
+            }
+            case "swift": {
+                this.genSwiftCode('code_output/swift')
+                break
+            }
+            case "ts": {
+                this.genTsCode('code_output/ts')
+                break
+            }
+            case "backend": {
+                break
+            }
+            default:{
+                break
+            }
+        }
 
         console.log('REST API code were generated to dir \'./code_output\' successfully!!');
     }

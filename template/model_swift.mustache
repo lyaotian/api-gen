@@ -1,0 +1,26 @@
+// 代码自动生成，不许修改
+// Auto generated code DO NOT EDIT !
+import ObjectMapper
+
+/**
+ * {{doc}}
+ */
+class {{name}}: {{extends}} {
+
+  {{#properties}}
+    /**{{doc}}*/
+    public var {{name}}: {{type}}?
+  {{/properties}}
+
+    required init?(map: Map) {
+        super.init(map: map)
+    }
+    
+    override func mapping(map: Map) {
+        super.mapping(map: map)
+
+        {{#properties}}
+        {{name}} <- map["{{name_origin}}"]
+        {{/properties}}
+    }
+}

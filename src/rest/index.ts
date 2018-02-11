@@ -253,7 +253,7 @@ export class RestModel {
         (api) => {
             return api.responseType
         });
-        if (language == "java"){
+        if (language == "java" || language == "ts"){
             allRef = allRef.filter((type) => {return type != 'BaseModel'});
         }
         return Array.from(new Set(allRef));

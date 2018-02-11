@@ -44,7 +44,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "swift"
+                "ts"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

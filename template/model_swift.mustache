@@ -12,10 +12,14 @@ class {{name}}: {{extends}} {
     public var {{name}}: {{type}}?
   {{/properties}}
 
+    required init() {
+        super.init()
+    }
+
     required init?(map: Map) {
         super.init(map: map)
     }
-    
+
     override func mapping(map: Map) {
         super.mapping(map: map)
 

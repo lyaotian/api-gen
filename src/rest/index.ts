@@ -298,7 +298,7 @@ export class RestModel {
         }
         let getMethodAnnotation = (api: APIItem) => {
             if (api.method == 'POST'){
-                return api.isUpload ? '@Multipart' : '@FormUrlEncoded';
+                return api.isUpload ? '@Multipart' : ((api.parameters != null && api.parameters.length > 0) ? '@FormUrlEncoded' : '')
             }
             return '';
         }

@@ -290,6 +290,7 @@ export class RestModel {
     }
     
     genJavaCode(dir: string){
+        const keywords = ["abstract","continue","for","new","switch","assert","default","goto","package","synchronized","boolean","do","if","private","this","break","double","implements","protected","throw","byte","else","import","public","throws","case","enum","instanceof","return","transient","catch","extends","int","short","try","char","final","interface","static","void","class","finally","long","strictfp","volatile","const","float","native","super","while"]
         let getParameterMethod = (api: APIItem) => {
             if (api.method == 'POST'){
                 return api.isUpload ? 'Part' : 'Field';
@@ -319,16 +320,18 @@ export class RestModel {
                 methodAnnotation: getMethodAnnotation(apiItem),
                 parameters: apiItem.parameters.map(
                     (paramItem: APIParameter, i: number) => {
-                        let name = paramItem.name;
+                        const name = paramItem.name
+                        let fieldName = name
                         let method = getParameterMethod(apiItem);
                         if (method == 'Part' && i == apiItem.parameters.length - 1){
                             method = 'PartMap';
-                            name = '';
+                            fieldName = '';
                         }
                         return Object.assign(paramItem, {
-                            fieldName: name,
+                            fieldName,
                             parameterMethod: method,
-                            parameterType: getParamType(paramItem)
+                            parameterType: getParamType(paramItem),
+                            name: (keywords.indexOf(name) >= 0) ? `_${name}` : name
                         })
                     })
             });

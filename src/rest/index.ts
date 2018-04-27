@@ -179,8 +179,10 @@ export class RestModel {
     language :Languages = "java"
     config: any
 
-    constructor(config: Config){
-        const fileName = root + '/api-docs.json';
+    constructor(
+        config: Config,
+        fileName = root + '/api-docs.json'
+    ){
         if (!fs.existsSync(fileName)){
             throw new Error("api-docs.json doesn't exists!");
         }
@@ -206,7 +208,16 @@ export class RestModel {
                     return null;
                 }
                 let isList = response.type == 'array';
-                let responseType = Utils.getRefType(isList ? response.items.$ref : response.$ref);
+                let responseType = ""
+                if (isList) {
+                    if (!response.items) {
+                        console.error(`no items with array type!! (${key})`)
+                    }
+                    responseType = Utils.getRefType(response.items.$ref)
+                } else {
+                    responseType = Utils.getRefType(response.$ref)
+                }
+
                 let path = key;
                 if (!content.parameters) {
                     content.parameters = []
@@ -257,6 +268,35 @@ export class RestModel {
             allRef = allRef.filter((type) => {return type != 'BaseModel'});
         }
         return Array.from(new Set(allRef));
+    }
+
+    verifyInput() {
+        let getParamType = (paramItem: APIParameter) => {
+            let inputType = paramItem.type;
+            if (inputType == 'file'){
+                return 'FormData';
+            }
+            return inputType;
+        }
+        try {
+            let config = Object.assign({}, this.config);
+            config.apis = config.apis.map((apiItem: APIItem) => {
+                let result = Object.assign(apiItem, {
+                    parameters: apiItem.parameters.map(
+                        (paramItem: APIParameter, i: number) => {
+                            return Object.assign(paramItem, {
+                                parameterType: getParamType(paramItem),
+                            })
+                        })
+                });
+                return result;
+            })
+
+            // console.log(this.config)
+            console.log(`apis looks good!`)
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     genTsCode(dir: string){

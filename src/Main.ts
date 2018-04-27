@@ -14,6 +14,11 @@ export default class Main {
         this.config = config
     }
 
+    public verify() {
+        new GenModel(this.config).verifyInput()
+        new RestModel(this.config).verifyInput()
+    }
+
     public java() {
         let doWork = () => this.copyCodes("java")
 

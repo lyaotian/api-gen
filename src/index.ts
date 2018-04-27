@@ -12,7 +12,7 @@ program
   .parse(process.argv)
 
 let config = program.config || './config.json'
-let output = program.output || 'java'
+let output = program.output
 if (!fs.existsSync(config)){
     throw new Error("config file doesn't exists!");
 }
@@ -41,6 +41,7 @@ switch (output) {
     break
   }
   default:{
-    throw new Error('unsupport ouput: ' + output);
+    main.verify()
+    break
   }
 }

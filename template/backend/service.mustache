@@ -46,7 +46,7 @@ class {{name}} {
     }
     {{/isGET}}
 
-    async doWork(params: any, requestInfo: FeathersRequestInfo): Promise<any> {
+    async doWork(params: any, requestInfo: FeathersRequestInfo): Promise<RequestResult<any> | RequestListResult<any>> {
         {{#isList}}
         let page = parseInt(params.page || 1)
         let page_size = parseInt(params.page_size || RequestListResult.PAGE_SIZE, 10)
@@ -56,13 +56,13 @@ class {{name}} {
         let {{name}}: {{type}} = {{{valueCode}}}
         {{/parameters}}
 
-        let data = new {{dataType}}()
-        let result = ResultWrapper.wrap{{#isList}}List{{/isList}}({{#isList}}[data]{{/isList}}{{^isList}}data{{/isList}})
+        let resultData = new {{dataType}}()
+        let result = ResultWrapper.wrap{{#isList}}List{{/isList}}<{{dataType}}>({{#isList}}[resultData]{{/isList}}{{^isList}}resultData{{/isList}})
         {{#isList}}
         result.page = page
         result.page_size = page_size
         {{/isList}}
-        result.message = '假数据'
+        result.message = ''
 
 //code2
 {{{code2}}}

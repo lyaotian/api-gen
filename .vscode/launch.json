@@ -44,7 +44,7 @@
                 "-c",
                 "../config.json",
                 "-o",
-                "ts"
+                "java"
             ],
             "preLaunchTask": null,
             "runtimeExecutable": null,

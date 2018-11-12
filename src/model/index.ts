@@ -129,7 +129,11 @@ export class GenModel {
                         let isArray = pItem.type == 'array'
                         if (isArray) {
                             if (pItem.items) {
-                                refType = pItem.items.type || Utils.getRefType(pItem.items.$ref)
+                                if (!!pItem.items.type) {
+                                    refType = pItem.items.type
+                                } else {
+                                    refType = Utils.getRefType(pItem.items.$ref)
+                                }
                             } else {
                                 console.error(`no items with array type!! (${key})`)
                             }

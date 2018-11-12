@@ -77,13 +77,15 @@ export class Utils {
         }
     }
 
-    static getRefType(refType = "#/definitions/BaseModel"): string{
-        let lIndex = refType.lastIndexOf('/');
-        if (lIndex > 0){
-            return refType.substring(lIndex + 1);
-        }
-        if (refType.toLowerCase() == 'string') {
-            return 'string'
+    static getRefType(refType: string | undefined | null): string{
+        if (!!refType) {
+            let lIndex = refType.lastIndexOf('/');
+            if (lIndex > 0){
+                return refType.substring(lIndex + 1);
+            }
+            if (refType.toLowerCase() == 'string') {
+                return 'string'
+            }
         }
         return "BaseModel";
     }

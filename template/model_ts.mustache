@@ -8,12 +8,12 @@ import {{{.}}} from './{{{.}}}';
 {{/refs}}
 
 /**
- * {{doc}}
+ * {{{doc}}}
  */
 export default class {{name}} extends {{extends}}  {
 
   {{#properties}}
-    /**{{doc}}*/
-    public {{name}} = {{{typeValue}}}
+    /**{{{doc}}}*/
+    public {{name}}{{^isRequired}}: {{type}} | null | undefined{{/isRequired}} = {{^isRequired}}null{{/isRequired}}{{#isRequired}}{{{typeValue}}}{{/isRequired}}
   {{/properties}}
 }

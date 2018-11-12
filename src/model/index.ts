@@ -138,6 +138,7 @@ export class GenModel {
                         return {
                             name: k,
                             type: pItem.type || refType,
+                            isRequired: !m.required || !!(m.required.find((v: string) => v == k)),
                             format: pItem.format,
                             genericType: isArray ? refType : null,
                             refType: refType,

@@ -14,6 +14,6 @@ export default class {{name}} extends {{extends}}  {
 
   {{#properties}}
     /**{{{doc}}}*/
-    public {{name}}{{^isRequired}}: {{type}} | null | undefined{{/isRequired}} = {{^isRequired}}null{{/isRequired}}{{#isRequired}}{{{typeValue}}}{{/isRequired}}
+    public {{name}}: {{type}}{{^isRequired}} | null | undefined{{/isRequired}} = {{^isRequired}}null{{/isRequired}}{{#isRequired}}{{{typeValue}}}{{/isRequired}}
   {{/properties}}
 }

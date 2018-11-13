@@ -97,7 +97,7 @@ export class GenModel {
     toTsPropertyTypeValue(p = property) {
         let inputType = p.type
         if (inputType == 'array') {
-            return 'new Array<' + p.genericType + '>()'
+            return '[]'
         } else if (
             inputType == 'long' ||
             inputType == 'number' ||
@@ -294,7 +294,18 @@ launch(language: Languages) {
                             }
                         }
 
-                        return Object.assign({}, p, { typeValue: this.toTsPropertyTypeValue(p) })
+                        if (p.type != 'array') {
+                            return {
+                                ...p,
+                                ...{ typeValue: this.toTsPropertyTypeValue(p) },
+                            }
+                        } else {
+                            return {
+                                ...p,
+                                ...{ typeValue: this.toTsPropertyTypeValue(p) },
+                                ...{ type: `${p.genericType} []`},
+                            }
+                        }
                     }
                 )
 

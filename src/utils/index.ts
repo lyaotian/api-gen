@@ -62,7 +62,7 @@ export class Utils {
         }else if(format == 'double'){
             switch (language) {
                 case "objc": {
-                    return 'CGFloat'
+                    return 'double'
                 }
                 case "swift": {
                     return 'Double'

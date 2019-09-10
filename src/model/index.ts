@@ -71,6 +71,20 @@ export class GenModel {
         return inputType
     }
 
+    //convert to kotlin type
+    toKotlinPropertyType(p = property) {
+        let inputType = p.type
+        if (inputType == 'array') {
+            return 'ArrayList<' + (p.genericType == 'string' ? 'String' : p.genericType) + '>'
+        } else if (inputType == 'number') {
+            return Utils.getNumberType(p.format, "kotlin")
+        } else if (inputType == 'string') {
+            return 'String'
+        }
+
+        return inputType
+    }
+
     //convert to java type
     toJavaPropertyType(p = property) {
         let inputType = p.type
@@ -110,6 +124,27 @@ export class GenModel {
             return '""'
         }
         return "new " + inputType + "()"
+    }
+
+    //convert to kotlin type default value
+    toKotlinPropertyTypeValue(p = property) {
+        let inputType = p.format || p.type
+
+        if (inputType == 'array') {
+            return 'arrayListOf()'
+        } else if (
+            inputType == 'long' ||
+            inputType == 'int' ||
+            inputType == 'double' ||
+            inputType == 'float'
+        ) {
+            return `0.to`+`${inputType.charAt(0)}`.toUpperCase() + `${inputType.substring(1)}()`
+        } else if (inputType == 'decimal') {
+            return `0.toBigDecimal()`
+        } else if (inputType == 'string') {
+            return '""'
+        }
+        return inputType + "()"
     }
 
     getModels(api_data: any) {
@@ -175,6 +210,46 @@ launch(language: Languages) {
 
     //read model_*.mustache file and create model code
     switch (language) {
+        case "kotlin": {
+            this.config.models.forEach((m: Model) => {
+                let codeTmp = fs.readFileSync(root + '/template/model_kotlin.mustache', 'utf8')
+                let _m: any = Object.assign({}, m)
+                _m.packageName = this.config.packageName
+                _m.refs = []
+                _m.properties = _m.properties.map(
+                    (p: Property, i: number) => {
+                        p.last = (i >= _m.properties.length-1)
+                        if (p.refType || p.genericType) {
+                            if (p.refType != 'BaseModel' && p.refType != 'string') {
+                                _m.refs.push(p.refType)
+                            }
+                        }
+                        // if (m.extends) {
+                        //     if (m.extends != 'BaseModel' && p.refType != 'string') {
+                        //         pushIfNotExists(m.extends)
+                        //     }
+                        // }
+
+                        let newP = Object.assign(
+                            {},
+                            p,
+                            {
+                                type: this.toKotlinPropertyType(p),
+                                nullable: this.isJavaPropertyNullable(p),
+                                typeValue: this.toKotlinPropertyTypeValue(p)
+                            }
+                        )
+                        newP.name = Utils.toCamelName(newP.name, '_')
+                        return newP
+                    }
+                )
+
+                let value = mustache.render(codeTmp, _m)
+                let path = './code_output/'+language+'/model/' + _m.name + '.kt'
+                fs.writeFileSync(path, value)
+            })
+            break
+        }
         case "java": {
             this.config.models.forEach((m: Model) => {
                 let codeTmp = fs.readFileSync(root + '/template/model_java.mustache', 'utf8')

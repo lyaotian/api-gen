@@ -6,4 +6,5 @@ export default class Property {
     isArray = false
     doc = "描述"
     format?: 'long'|'int'|'int32'|'int64'|'float'|'double'
+    last?: boolean = false
 }

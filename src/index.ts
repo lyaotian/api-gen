@@ -24,6 +24,10 @@ switch (output) {
     main.java()
     break
   }
+  case 'kotlin': {
+    main.kotlin()
+    break
+  }
   case 'objc': {
     main.objc()
     break
@@ -41,6 +45,7 @@ switch (output) {
     break
   }
   default:{
+    console.log(`using default output options`)
     main.verify()
     break
   }

@@ -12,6 +12,7 @@ declare interface Config {
 }
 
 declare interface OutputDir {
+    kotlin: string
     java: string
     objc: string
     swift: string
@@ -19,4 +20,4 @@ declare interface OutputDir {
     backend: string
 }
 
-type Languages = "java"|"objc"|"swift"|"ts"|"backend"
+type Languages = "kotlin"|"java"|"objc"|"swift"|"ts"|"backend"

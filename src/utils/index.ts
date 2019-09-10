@@ -28,6 +28,7 @@ export class Utils {
                 case "objc": {
                     return 'NSInteger'
                 }
+                case "kotlin":
                 case "swift": {
                     return 'Int'
                 }
@@ -40,6 +41,7 @@ export class Utils {
                 case "objc": {
                     return 'NSInteger'
                 }
+                case "kotlin":
                 case "swift": {
                     return 'Int64'
                 }
@@ -52,6 +54,7 @@ export class Utils {
                 case "objc": {
                     return 'CGFloat'
                 }
+                case "kotlin":
                 case "swift": {
                     return 'Float'
                 }
@@ -63,6 +66,22 @@ export class Utils {
             switch (language) {
                 case "objc": {
                     return 'double'
+                }
+                case "kotlin":
+                case "swift": {
+                    return 'Double'
+                }
+                default:{
+                    return 'double'
+                }
+            }
+        }else if(format == 'decimal'){
+            switch (language) {
+                case "objc": {
+                    return 'double'
+                }
+                case "kotlin": {
+                    return 'BigDecimal'
                 }
                 case "swift": {
                     return 'Double'

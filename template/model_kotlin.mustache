@@ -1,0 +1,18 @@
+// 代码自动生成，不许修改
+// Auto generated code DO NOT EDIT !
+
+package {{packageName}}.api.model
+
+import {{packageName}}.api.BaseModel
+import java.math.BigDecimal
+
+
+/**
+ * {{doc}}
+ */
+data class {{name}}(
+  {{#properties}}
+    /**{{doc}}*/
+    var {{name}}: {{{type}}}{{#nullable}}?{{/nullable}} = {{^isRequired}}null{{/isRequired}}{{#isRequired}}{{{typeValue}}}{{/isRequired}} {{^last}},{{/last}}
+  {{/properties}}
+): {{extends}}()

@@ -15,12 +15,21 @@ export default class Main {
     }
 
     public verify() {
+        console.log(`verifying...`)
         new GenModel(this.config).verifyInput()
         new RestModel(this.config).verifyInput()
     }
 
     public java() {
         let doWork = () => this.copyCodes("java")
+
+        this.downloadApiDocs()
+        .then(doWork)
+        .catch(doWork)
+    }
+
+    public kotlin() {
+        let doWork = () => this.copyCodes("kotlin")
 
         this.downloadApiDocs()
         .then(doWork)
@@ -92,15 +101,29 @@ export default class Main {
         let copyFrom = ''
         let copyTo = ''
         switch (language) {
+            case "kotlin": {
+                const modelDir = outDir + '/kotlin/model'
+                fs.ensureDirSync(modelDir)
+                new GenModel(this.config).launch(language)
+
+                apiDir = this.config.apiDir.kotlin
+                fs.emptyDirSync(apiDir + '/model')
+                copyFrom = modelDir
+                copyTo = apiDir + '/model'
+                fs.copySync(copyFrom, copyTo)
+                console.log(copyFrom + ' => ' + copyTo)
+    
+                break
+            }
             case "java": {
-                const modelDirJava = outDir + '/java/model'
-                fs.ensureDirSync(modelDirJava)
+                const modelDir = outDir + '/java/model'
+                fs.ensureDirSync(modelDir)
                 new GenModel(this.config).launch(language)
                 new RestModel(this.config).launch(language)
 
                 apiDir = this.config.apiDir.java
                 fs.emptyDirSync(apiDir + '/model')
-                copyFrom = modelDirJava
+                copyFrom = modelDir
                 copyTo = apiDir + '/model'
                 fs.copySync(copyFrom, copyTo)
                 console.log(copyFrom + ' => ' + copyTo)
@@ -112,14 +135,14 @@ export default class Main {
                 break
             }
             case "objc": {
-                const modelDirObjc = outDir + '/objc/model'
-                fs.ensureDirSync(modelDirObjc)
+                const modelDir = outDir + '/objc/model'
+                fs.ensureDirSync(modelDir)
                 new GenModel(this.config).launch(language)
                 new RestModel(this.config).launch(language)
 
                 apiDir = this.config.apiDir.objc
                 fs.emptyDirSync(apiDir + '/model')
-                copyFrom = modelDirObjc
+                copyFrom = modelDir
                 copyTo = apiDir + '/model'
                 fs.copySync(copyFrom, copyTo)
                 console.log(copyFrom + ' => ' + copyTo)
@@ -136,14 +159,14 @@ export default class Main {
                 break
             }
             case "swift": {
-                const modelDirSwift = outDir + '/swift/model'
-                fs.ensureDirSync(modelDirSwift)
+                const modelDir = outDir + '/swift/model'
+                fs.ensureDirSync(modelDir)
                 new GenModel(this.config).launch(language)
                 new RestModel(this.config).launch(language)
 
                 apiDir = this.config.apiDir.swift
                 fs.emptyDirSync(apiDir + '/model')
-                copyFrom = modelDirSwift
+                copyFrom = modelDir
                 copyTo = apiDir + '/model'
                 fs.copySync(copyFrom, copyTo)
                 console.log(copyFrom + ' => ' + copyTo)
@@ -155,14 +178,14 @@ export default class Main {
                 break
             }
             case "ts": {
-                const modelDirTs = outDir + '/ts/model'
-                fs.ensureDirSync(modelDirTs)
+                const modelDir = outDir + '/ts/model'
+                fs.ensureDirSync(modelDir)
                 new GenModel(this.config).launch(language)
                 new RestModel(this.config).launch(language)
 
                 apiDir = this.config.apiDir.ts
                 fs.emptyDirSync(apiDir + '/model')
-                copyFrom = modelDirTs
+                copyFrom = modelDir
                 copyTo = apiDir + '/model'
                 fs.copySync(copyFrom, copyTo)
                 console.log(copyFrom + ' => ' + copyTo)

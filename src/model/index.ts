@@ -235,7 +235,7 @@ launch(language: Languages) {
                             p,
                             {
                                 type: this.toKotlinPropertyType(p),
-                                nullable: this.isJavaPropertyNullable(p),
+                                nullable: true,
                                 typeValue: this.toKotlinPropertyTypeValue(p)
                             }
                         )
